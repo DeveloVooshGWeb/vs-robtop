@@ -1,0 +1,145 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=4
+
+_global_script_classes=[ {
+"base": "Reference",
+"class": "ARCFOUR",
+"language": "GDScript",
+"path": "res://NCrypt/Cipher/ARCFOUR.gd"
+}, {
+"base": "Reference",
+"class": "CHACHA",
+"language": "GDScript",
+"path": "res://NCrypt/Cipher/CHACHA.gd"
+}, {
+"base": "Reference",
+"class": "CSPRNG",
+"language": "GDScript",
+"path": "res://NCrypt/PRNG/CSPRNG.gd"
+}, {
+"base": "Reference",
+"class": "HMACSHA256",
+"language": "GDScript",
+"path": "res://NCrypt/Hash/HMACSHA256.gd"
+}, {
+"base": "Reference",
+"class": "NCrypt",
+"language": "GDScript",
+"path": "res://NCrypt/NCrypt.gd"
+}, {
+"base": "Reference",
+"class": "PKCS5",
+"language": "GDScript",
+"path": "res://NCrypt/Pad/PKCS5.gd"
+}, {
+"base": "Reference",
+"class": "SHA256",
+"language": "GDScript",
+"path": "res://NCrypt/Hash/SHA256.gd"
+}, {
+"base": "Reference",
+"class": "SIPHASH",
+"language": "GDScript",
+"path": "res://NCrypt/Hash/SIPHASH.gd"
+} ]
+_global_script_class_icons={
+"ARCFOUR": "",
+"CHACHA": "",
+"CSPRNG": "",
+"HMACSHA256": "",
+"NCrypt": "",
+"PKCS5": "",
+"SHA256": "",
+"SIPHASH": ""
+}
+
+[application]
+
+config/name="FNF Vs Robtop"
+config/description="Mod/Fangame Made By:
+Breadward, Duckstuffed, Gamemaster, GWeb, MauveDash, ValenPratama, Fluffy, WikiThePedia & Sierra"
+run/main_scene="res://scenes/Main.tscn"
+run/delta_sync_after_draw=true
+boot_splash/image="res://daSplash.png"
+boot_splash/fullsize=false
+boot_splash/use_filter=false
+boot_splash/bg_color=Color( 0, 0, 0, 1 )
+config/icon="res://icon.ico"
+config/macos_native_icon="res://icon.ico"
+config/windows_native_icon="res://icon.ico"
+run/size/height=1080
+run/size/width=1920
+
+[audio]
+
+output_latency=1
+output_latency.web=10
+
+[autoload]
+
+Assets="*res://autoload/Assets.gd"
+Sound="*res://autoload/Sound.tscn"
+AES="*res://autoload/AES.gd"
+SceneTransition="*res://autoload/SceneTransition.tscn"
+BeatHandler="*res://autoload/BeatHandler.gd"
+Utils="*res://autoload/Utils.gd"
+EaseHandler="*res://autoload/EaseHandler.tscn"
+Antibot="*res://autoload/Antibot.gd"
+Data="*res://autoload/Data.gd"
+InputHandler="*res://autoload/InputHandler.gd"
+FPSCounter="*res://autoload/FPSCounter.tscn"
+Chart="*res://autoload/Chart.gd"
+GEVT="*res://autoload/GEVT.gd"
+
+[display]
+
+window/size/width=1920
+window/size/height=1080
+window/size/test_width=1280
+window/size/test_height=720
+window/dpi/allow_hidpi=true
+window/vsync/vsync_via_compositor=true
+window/per_pixel_transparency/allowed=true
+window/stretch/mode="2d"
+window/stretch/aspect="keep"
+
+[input]
+
+confirm={
+"deadzone": 0.5,
+"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":16777221,"physical_scancode":0,"unicode":0,"echo":false,"script":null)
+ ]
+}
+
+[physics]
+
+common/enable_pause_aware_picking=true
+2d/thread_model=2
+
+[rendering]
+
+quality/driver/fallback_to_gles2=true
+quality/intended_usage/framebuffer_allocation=0
+quality/intended_usage/framebuffer_allocation.mobile=0
+threads/thread_model=2
+threads/thread_safe_bvh=true
+vram_compression/import_bptc=true
+vram_compression/import_etc=true
+vram_compression/import_pvrtc=true
+quality/shadows/filter_mode=0
+quality/reflections/texture_array_reflections=false
+quality/reflections/high_quality_ggx=false
+quality/shading/force_vertex_shading=true
+quality/shading/force_lambert_over_burley=true
+quality/shading/force_blinn_over_ggx=true
+quality/depth_prepass/enable=false
+quality/lightmapping/use_bicubic_sampling=false
+quality/depth/hdr=false
+quality/low_processor_mode=false

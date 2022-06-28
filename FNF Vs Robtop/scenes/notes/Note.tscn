@@ -1,0 +1,26 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://assets/res/notes/type0.res" type="SpriteFrames" id=1]
+[ext_resource path="res://scripts/notes/Note.gd" type="Script" id=2]
+
+[sub_resource type="ShaderMaterial" id=2]
+resource_local_to_scene = true
+
+[node name="Note" type="Node2D"]
+material = SubResource( 2 )
+script = ExtResource( 2 )
+
+[node name="HoldPiece" type="Sprite" parent="."]
+centered = false
+region_enabled = true
+
+[node name="HoldEnd" type="Sprite" parent="."]
+centered = false
+region_enabled = true
+
+[node name="NoteContainer" type="CenterContainer" parent="."]
+
+[node name="Note" type="AnimatedSprite" parent="NoteContainer"]
+frames = ExtResource( 1 )
+animation = "event"
+playing = true

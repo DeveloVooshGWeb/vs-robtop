@@ -1,0 +1,89 @@
+[gd_scene load_steps=13 format=2]
+
+[ext_resource path="res://scripts/MainMenuState.gd" type="Script" id=1]
+[ext_resource path="res://assets/png/menu/play.png" type="Texture" id=2]
+[ext_resource path="res://assets/png/gdBackgrounds/1.png" type="Texture" id=3]
+[ext_resource path="res://misc/menuBGScroll.gd" type="Script" id=4]
+[ext_resource path="res://assets/environments/menuGlow.tres" type="Environment" id=6]
+[ext_resource path="res://misc/menuGndScroll.gd" type="Script" id=7]
+[ext_resource path="res://scenes/MenuBlock.tscn" type="PackedScene" id=8]
+[ext_resource path="res://assets/fonts/tres/menuTitle.tres" type="DynamicFont" id=9]
+[ext_resource path="res://assets/png/menu/options.png" type="Texture" id=12]
+[ext_resource path="res://assets/png/menu/stats.png" type="Texture" id=13]
+[ext_resource path="res://assets/png/menu/credits.png" type="Texture" id=14]
+[ext_resource path="res://assets/png/menu/bonusSongs.png" type="Texture" id=15]
+
+[node name="MainMenuState" type="Node2D"]
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_horizontal_guides_": [  ]
+}
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = ExtResource( 6 )
+
+[node name="ParallaxBG" type="ParallaxBackground" parent="."]
+script = ExtResource( 4 )
+
+[node name="ParallaxBGLayer" type="ParallaxLayer" parent="ParallaxBG"]
+motion_mirroring = Vector2( 2048, 0 )
+
+[node name="BGSprite" type="Sprite" parent="ParallaxBG/ParallaxBGLayer"]
+modulate = Color( 0.027451, 0.235294, 0.94902, 1 )
+position = Vector2( 960, 540 )
+texture = ExtResource( 3 )
+
+[node name="ParallaxGround" type="ParallaxBackground" parent="."]
+layer = -99
+script = ExtResource( 7 )
+
+[node name="ParallaxGroundLayer" type="ParallaxLayer" parent="ParallaxGround"]
+motion_mirroring = Vector2( 384, 0 )
+
+[node name="MB1" parent="ParallaxGround/ParallaxGroundLayer" instance=ExtResource( 8 )]
+position = Vector2( 0, 993 )
+
+[node name="MB2" parent="ParallaxGround/ParallaxGroundLayer" instance=ExtResource( 8 )]
+position = Vector2( 768, 993 )
+
+[node name="MB3" parent="ParallaxGround/ParallaxGroundLayer" instance=ExtResource( 8 )]
+position = Vector2( 1536, 993 )
+
+[node name="MB4" parent="ParallaxGround/ParallaxGroundLayer" instance=ExtResource( 8 )]
+position = Vector2( 2304, 993 )
+
+[node name="Title" type="Label" parent="."]
+modulate = Color( 0.635294, 1, 0.380392, 1 )
+show_behind_parent = true
+margin_right = 1920.0
+margin_bottom = 200.0
+rect_pivot_offset = Vector2( 418, 375 )
+custom_fonts/font = ExtResource( 9 )
+text = "FNF VS ROBTOP"
+align = 1
+valign = 1
+
+[node name="PlayBtn" type="Sprite" parent="."]
+position = Vector2( 960, 540 )
+scale = Vector2( 0.6, 0.6 )
+texture = ExtResource( 2 )
+
+[node name="OptsBtn" type="Sprite" parent="."]
+position = Vector2( 960, 950 )
+scale = Vector2( 0.6, 0.6 )
+texture = ExtResource( 12 )
+
+[node name="StatsBtn" type="Sprite" parent="."]
+position = Vector2( 680, 950 )
+scale = Vector2( 0.6, 0.6 )
+texture = ExtResource( 13 )
+
+[node name="CreditsBtn" type="Sprite" parent="."]
+position = Vector2( 1240, 950 )
+scale = Vector2( 0.6, 0.6 )
+texture = ExtResource( 14 )
+
+[node name="BonusSongsBtn" type="Sprite" parent="."]
+position = Vector2( 1300, 540 )
+scale = Vector2( 0.6, 0.6 )
+texture = ExtResource( 15 )

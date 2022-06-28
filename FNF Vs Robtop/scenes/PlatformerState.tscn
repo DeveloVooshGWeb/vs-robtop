@@ -1,0 +1,71 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://assets/png/gdBackgrounds/5.png" type="Texture" id=1]
+[ext_resource path="res://scripts/PlatformerState.gd" type="Script" id=2]
+[ext_resource path="res://assets/png/gdGrounds/5.png" type="Texture" id=3]
+[ext_resource path="res://scripts/platformer/Player.gd" type="Script" id=4]
+[ext_resource path="res://icon.svg" type="Texture" id=5]
+
+[sub_resource type="RectangleShape2D" id=2]
+resource_local_to_scene = true
+extents = Vector2( 1920, 192 )
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 48, 48 )
+
+[node name="PlatformerState" type="Node2D"]
+script = ExtResource( 2 )
+
+[node name="Cam" type="Camera2D" parent="."]
+position = Vector2( 960, 540 )
+current = true
+smoothing_enabled = true
+
+[node name="Objects" type="Node2D" parent="."]
+position = Vector2( 960, 540 )
+
+[node name="BG" type="Node2D" parent="Objects"]
+position = Vector2( 960, 540 )
+
+[node name="Spr" type="Sprite" parent="Objects/BG"]
+position = Vector2( -960, -540 )
+scale = Vector2( 0.75, 0.75 )
+texture = ExtResource( 1 )
+offset = Vector2( 1280, -256 )
+region_enabled = true
+region_rect = Rect2( 0, 0, 5120, 2048 )
+
+[node name="Gnd" type="KinematicBody2D" parent="Objects"]
+position = Vector2( 0, 480 )
+motion/sync_to_physics = true
+
+[node name="Spr" type="Sprite" parent="Objects/Gnd"]
+scale = Vector2( 0.75, 0.75 )
+texture = ExtResource( 3 )
+offset = Vector2( 1280, 0 )
+region_enabled = true
+region_rect = Rect2( 0, 0, 5120, 512 )
+
+[node name="Collider" type="CollisionShape2D" parent="Objects/Gnd"]
+position = Vector2( 960, 0 )
+shape = SubResource( 2 )
+
+[node name="Player" type="KinematicBody2D" parent="Objects"]
+position = Vector2( -912, 128 )
+script = ExtResource( 4 )
+
+[node name="Spr" type="ColorRect" parent="Objects/Player"]
+margin_left = -48.0
+margin_top = -48.0
+margin_right = 48.0
+margin_bottom = 48.0
+color = Color( 0.054902, 0.8, 0.415686, 1 )
+
+[node name="Sprite" type="Sprite" parent="Objects/Player"]
+scale = Vector2( 0.188, 0.188 )
+texture = ExtResource( 5 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Objects/Player"]
+shape = SubResource( 1 )
+
+[node name="Timer" type="Timer" parent="."]
