@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="None">
+        
+        
+        <link rel="shortcut icon" href="img/favicon.ico">
+        <title>Vs Robtop Charter Docs 0.1</title>
+        <link href="css/bootstrap.min.css" rel="stylesheet">
+        <link href="css/font-awesome.min.css" rel="stylesheet">
+        <link href="css/base.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css">
+
+        <script src="js/jquery-1.10.2.min.js" defer></script>
+        <script src="js/bootstrap.min.js" defer></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+        <script>hljs.initHighlightingOnLoad();</script> 
+    </head>
+
+    <body class="homepage">
+        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href=".">Vs Robtop Charter Docs 0.1</a>
+
+                <!-- Expanded navigation -->
+                <div id="navbar-collapse" class="navbar-collapse collapse">
+
+                    <ul class="nav navbar-nav ml-auto">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-toggle="modal" data-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                    <div class="col-md-3"><div class="navbar-light navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggler collapsed" data-toggle="collapse" data-target="#toc-collapse" title="Table of Contents">
+            <span class="fa fa-angle-down"></span>
+        </button>
+    </div>
+
+    
+    <div id="toc-collapse" class="navbar-collapse collapse card bg-secondary">
+        <ul class="nav flex-column">
+            
+            <li class="nav-item" data-level="1"><a href="#about" class="nav-link">About</a>
+              <ul class="nav flex-column">
+            <li class="nav-item" data-level="2"><a href="#charter-problems" class="nav-link">Charter Problems</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#charter-features" class="nav-link">Charter Features</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#what-else" class="nav-link">What Else</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#hard-coding-and-soft-coding" class="nav-link">Hard Coding And Soft Coding</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#variables" class="nav-link">Variables</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#types-of-variables" class="nav-link">Types Of Variables</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#before-the-function-list" class="nav-link">Before The Function List</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+              </ul>
+            </li>
+            
+            <li class="nav-item" data-level="1"><a href="#function-list" class="nav-link">Function List</a>
+              <ul class="nav flex-column">
+            <li class="nav-item" data-level="2"><a href="#camshake" class="nav-link">camShake</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#stopcamshake" class="nav-link">stopCamShake</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#noterotate" class="nav-link">noteRotate</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#camzoom" class="nav-link">camZoom</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#cammove" class="nav-link">camMove</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#openurl" class="nav-link">openURL</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#print" class="nav-link">print</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+              </ul>
+            </li>
+        </ul>
+    </div>
+</div></div>
+                    <div class="col-md-9" role="main">
+
+<h1 id="about">About</h1>
+<p>Vs Robtop is a mod developed by Breadward MacGluten.
+<br>
+This is the official charter for the mod.
+<br>
+What you are reading is the documentation for the charter.
+<br>
+This piece of information was meant for the following people:</p>
+<pre><code>Members:
+Breadward MacGluten # Charting Mine and Valen's songs.
+MauveDash # Charting her own songs.
+Duckstuffed # Charting his own songs.
+GWebDev # Probably some of my songs or just the events of my songs.
+Myst # I have no idea what he will do.
+</code></pre>
+<h2 id="charter-problems">Charter Problems</h2>
+<ul>
+<li>No Sound Tray (YET)</li>
+<li>When making a chart PLEASE create a folder named as the song you have entered in the charter in the path of <code>assets/data/charts/thesongyouentered</code>.</li>
+<li>The song name provided in the Charter must exactly match the folder name which is made inside of <code>assets/data/charts</code>.</li>
+<li>Gameplay isn't finished so if it crashes don't be surprised. <em>(I'm talking about when you preview the chart by pressing Enter on the Charter)</em></li>
+<li>If you press Enter it'll test the Chart BUT it also <em>autosaves</em> and <em>overwrites</em> the <em>Chart</em> at <code>assets/data/charts/thesongyouentered/1.bin</code>.</li>
+<li>Only save the Chart AS <code>1.bin</code> inside of <code>assets/data/charts/thesongyouentered</code>.</li>
+<li>Holding <em>Alt</em> to drag place notes can cause lagging depending on the amount of notes you have placed.</li>
+<li><ins>Event Notes</ins> CANNOT be previewed in the gameplay because i'd have to <ins>code</ins> the functions you call from the <em>event notes</em> in the Gameplay.</li>
+<li>You can only <ins>chart</ins> and <ins>preview</ins>. There is no <ins>Title Screen</ins> or <ins>Menu</ins>. <em>(Hey that rhymed)</em></li>
+<li>OGG files should be placed inside of <code>assets/ogg/songs/thesongyouentered/Inst.ogg</code> <ins>Inst.ogg is required</ins> while Voices.ogg <ins>isn't</ins> required. (<code>If you include Voices.ogg it'll have audio cracks so i suggest exporting your ogg file with the INSTRUMENTAL and VOICES as Inst.ogg instead of separating both of them just like what "Tutorial" did</code>)</li>
+<li><ins>There is no keybind to change the note's sustain length</ins>. (You have to manually type it)</li>
+<li>You have to use a 44100 hz speaker so the notes won't lag.</li>
+<li>Vs Robtop is the only one that <ins>can open the saved charts</ins>.</li>
+<li>IF YOU ACCUSE ME OF HACKING YOUR COMPUTER</li>
+</ul>
+<h2 id="charter-features">Charter Features</h2>
+<ul>
+<li>Pressing Q or E will change what type of note you place next.</li>
+<li>Pressing Tab allows you to change what data of the next notes you place are.</li>
+<li>Holding Alt and Holding Left Click while moving your mouse allows you to place Multiple Notes.</li>
+<li>Holding Control and Pressing Left Click on a note will allow you to select the note and change its data.</li>
+<li>Pressing Left or Right allows you to change sections.</li>
+<li>Holding Up or Down will allow you to scroll through the section. (Keyboard)</li>
+<li>Scrolling Up or Down will also allow you to scroll through the section. (Mouse)</li>
+<li>Holding Shift allows you to free place notes. (Disable snapping)</li>
+<li>Pressing Spacebar allows you to Pause/Resume the music.</li>
+<li>There are buttons that explain what else you can do.</li>
+<li>If you are wondering why the song doesn't load when you enter it PRESS THE RELOAD SONG BUTTON.</li>
+</ul>
+<h2 id="what-else">What Else</h2>
+<p>The Charter includes another type of note called an Event Note. (Kinda like in Psych Engine)
+<br>
+However the Event Notes here are actually coded.
+<br>
+The Documentation will show the list of things you can do with the Event Notes.
+<br>
+<ins>If you, a member of the mod, wants to do something that isn't in the list of things that you can do with the Event Notes then contact me to add your OWN function.</ins> (I will also show the name of the person who added these functions)
+<br>
+<strong>The Documentation will constantly be edited when someone adds something to the list of Event Note functions.</strong> (But it will no longer be edited once the mod is rolled out.)
+<br>
+<strong>The Documentation will also be made public after the mod released.</strong></p>
+<h2 id="hard-coding-and-soft-coding">Hard Coding And Soft Coding</h2>
+<p>Before showing the list of things you can do with the Event Notes, you'd have to learn what you can pass in the list of things you can do with the Event Notes.
+<br>
+They are defined as functions which is type of code that executes multiple code. (I am the one who is going to be coding this)
+<br>
+First you need to know the difference between Hard Coding and Soft Coding.
+<br>
+You also need to know about some terminology.</p>
+<ul>
+<li>Compiling is a process in which human written code is translated into machine code or 1s and 0s which the computer can only understand. After compiling, you cannot retrieve the human readable code.</li>
+<li>Hard Coding is the process wherein the code is being embedded directly in an application which is compiled.</li>
+<li>Soft Coding is the process wherein the code isn't compiled but is read by a compiled application to execute/run.</li>
+</ul>
+<p><ins>I don't think that GDScript (which is the coding language Godot uses) is Hard Coding but i'll call it that way since it's changed into .gdc files and i have no idea if they can be modified or not but whatever.</ins></p>
+<p>So the functions are coded by me and are <ins>hardcoded</ins> while the Event Notes are coded by the charter and are <ins>softcoded</ins>.</p>
+<h2 id="variables">Variables</h2>
+<p>Variables are stuff that you store data to in Coding just like in Math Algebra.
+<br>
+Variables will be used in Event Notes but not by declaring one like in your Typical Coding Session.
+<br>
+In this case, you pass data directly in the function with the Event Notes.
+<br>
+But the question is... what do i pass?</p>
+<h2 id="types-of-variables">Types Of Variables</h2>
+<p>There are plenty types of Variables SPECIALLY in game engines like Godot but for GEVT <strong>(GWeb Event)</strong> Code, we will only use 5 types of variables.
+<br>
+Here is the list of Variables:</p>
+<ul>
+<li><strong>int</strong> - An <ins>Integer</ins> is a type of variable that can hold Positive or Negative numbers. The most common type of Integer is the Int32 type which allows you to store a 4 byte number. By default, an Int32 is signed giving it the ability to store Negative numbers. The minimum value of an Int32 is <ins>-2147483648</ins> and the maximum value of an Int32 is <ins>2147483647</ins>.</li>
+<li><strong>String</strong> - A <ins>String</ins> is a type of variable that can hold <ins>TEXT</ins>. It usually starts with 2 Quotation Marks. In my event system, you HAVE to use Quotation Marks instead of Apostrophes. An example of a String is: "Hello World".</li>
+<li><strong>float</strong> - A <ins>Float</ins> is a type of variable that can hold Positive or Negative <ins>DECIMAL</ins> numbers. Floats are usually 4 bytes like Int32 variables but it depends and i could be wrong. A Float is usually called as a <strong>Single</strong> because they have no <ins>Girlfriend</ins>.</li>
+<li><strong>double</strong> - A <ins>Double</ins> is a type of variable that is like a <ins>Float</ins> but can hold twice more because it is a Couple.</li>
+<li><strong>bool</strong> - A <ins>Boolean</ins> is a type of variable that can be either true or false. (In lowercase)</li>
+</ul>
+<p><ins>Me mentioning that Floats have no Girlfriends (they are still called as a Single) and doubles being Couples are jokes and are not real terminologies in coding.</ins></p>
+<h2 id="before-the-function-list">Before The Function List</h2>
+<p>I hope that you will understand the following list of functions you can code in the Event Notes.
+<br>
+Before the list tho i wanted to show you a demonstration of how the functions should be called.
+<br>
+<br>
+<strong>FUNCTION ARG1 ARG2 ARG3 ARG4</strong>
+<br>
+The first word is the function you want to call and the arg1, arg2, arg3 and arg4 are the arguments you pass.
+<br>
+Each of the arguments should be a variable type.
+<br>
+The type of arguments in each function will be specified in the function list.
+<br>
+The function names are also <strong>CASE SENSITIVE</strong> meaning you have to type it in the same capitalization and stuff.
+<br>
+Good Luck!</p>
+<h1 id="function-list">Function List</h1>
+<h2 id="camshake"><strong>camShake</strong></h2>
+<ul>
+<li>
+<p>This Function Was Added by GWebDev.</p>
+<p><strong>Format:</strong> <code>camShake intensity time</code></p>
+<h4 id="arguments"><strong>Arguments:</strong></h4>
+<p><table>
+    <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <td>intensity</td>
+        <td>float</td>
+        <td>How strong the shake is.</td>
+    </tr>
+    <tr>
+        <td>time</td>
+        <td>int</td>
+        <td>The amount of time in milliseconds the shake will last for.<br>(If it is 0 then it will last forever)</td>
+    </tr>
+</table>
+<br></p>
+</li>
+</ul>
+<h2 id="stopcamshake"><strong>stopCamShake</strong></h2>
+<ul>
+<li>
+<p>This Function Was Added by GWebDev.</p>
+<p><strong>Format:</strong> <code>stopCamShake</code></p>
+<h4 id="arguments_1"><strong>Arguments:</strong></h4>
+<h6 id="none-just-type-stopcamshake"><strong>None. Just type <code>stopCamShake</code>.</strong></h6>
+<p><br></p>
+</li>
+</ul>
+<h2 id="noterotate"><strong>noteRotate</strong></h2>
+<ul>
+<li>
+<p>This Function Was Added by GWebDev.</p>
+<p><strong>Format:</strong> <code>noteRotate col deg ccw time amount tweenType easeType</code></p>
+<h4 id="arguments_2"><strong>Arguments:</strong></h4>
+<p><table>
+    <tr>
+    <th>Name</th>
+    <th>Type</th>
+    <th>Description</th>
+    </tr>
+    <tr>
+        <td>col</td>
+        <td>int</td>
+        <td>The column it will rotate. <code>0</code> to <code>7</code></td>
+    </tr>
+    <tr>
+        <td>deg</td>
+        <td>int</td>
+        <td>The amount of degrees the note will rotate to.</td>
+    </tr>
+    <tr>
+        <td>ccw</td>
+        <td>bool</td>
+        <td>If it should rotate counterclockwise or not.</td>
+    </tr>
+    <tr>
+        <td>time</td>
+        <td>int</td>
+        <td>The amount of time in milliseconds the note will take to rotate to the target degrees.<br>(If it is 0 then it will last forever)</td>
+    </tr>
+    <tr>
+        <td>amount</td>
+        <td>int</td>
+        <td>The amount of times the note will rotate.</td>
+    </tr>
+    <tr>
+        <td>tweenType</td>
+        <td>String</td>
+        <td><code>LINEAR</code> | <code>SINE</code> | <code>QUINT</code> | <code>QUART</code> | <code>QUAD</code> | <code>EXPO</code> | <code>ELASTIC</code> | <code>CUBIC</code> | <code>CIRC</code> | <code>BOUNCE</code> | <code>BACK</code></td>
+    </tr>
+    <tr>
+        <td>easeType</td>
+        <td>String</td>
+        <td><code>IN</code> | <code>OUT</code> | <code>IN_OUT</code> | <code>OUT_IN</code></td>
+    </tr>
+</table>
+<strong>Sidenote 1: The col should only be either 0 to 7. The reason it doesn't start with 1 is because computers start counting from whole numbers and not from counting numbers.</strong>
+<br>
+<strong>Sidenote 2: The Tween &amp; Ease types are CASE SENSITIVE so please write the exact text of your choice from the Description.</strong>
+<br>
+<strong>Sidenote 3: For Ease previews, look at: </strong><a href="https://easings.net/">https://easings.net/</a>
+<br></p>
+</li>
+</ul>
+<h2 id="camzoom"><strong>camZoom</strong></h2>
+<ul>
+<li>
+<p>This Function Was Added by GWebDev.</p>
+<p><strong>Format:</strong> <code>camZoom zoom time tweenType easeType</code></p>
+<h4 id="arguments_3"><strong>Arguments:</strong></h4>
+<p><table>
+    <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <td>zoom</td>
+        <td>float</td>
+        <td>The zoom you want the camera to be in.</td>
+    </tr>
+    <tr>
+        <td>time</td>
+        <td>int</td>
+        <td>The amount of time in milliseconds before the camera zooms to the target zoom.<br>(If it is 0 then it will last forever)</td>
+    </tr>
+    <tr>
+        <td>tweenType</td>
+        <td>String</td>
+        <td><code>LINEAR</code> | <code>SINE</code> | <code>QUINT</code> | <code>QUART</code> | <code>QUAD</code> | <code>EXPO</code> | <code>ELASTIC</code> | <code>CUBIC</code> | <code>CIRC</code> | <code>BOUNCE</code> | <code>BACK</code></td>
+    </tr>
+    <tr>
+        <td>easeType</td>
+        <td>String</td>
+        <td><code>IN</code> | <code>OUT</code> | <code>IN_OUT</code> | <code>OUT_IN</code></td>
+    </tr>
+</table>
+<strong>Sidenote 1: The Tween &amp; Ease types are CASE SENSITIVE so please write the exact text of your choice from the Description.</strong>
+<br>
+<strong>Sidenote 2: If the zoom is 0 it will reset the Camera Zoom.</strong>
+<br></p>
+</li>
+</ul>
+<h2 id="cammove"><strong>camMove</strong></h2>
+<ul>
+<li>
+<p>This Function Was Made By GWebDev.</p>
+<p><strong>Format:</strong> <code>camMove offsetX offsetY time tweenType easeType</code></p>
+<h4 id="arguments_4"><strong>Arguments:</strong></h4>
+<p><table>
+    <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <td>offsetX</td>
+        <td>int</td>
+        <td>Camera Offset in the X Axis.</td>
+    </tr>
+    <tr>
+        <td>offsetY</td>
+        <td>int</td>
+        <td>Camera Offset in the Y Axis.</td>
+    </tr>
+    <tr>
+        <td>time</td>
+        <td>int</td>
+        <td>The amount of time in milliseconds it will take for the Camera to move to the specified offsets.<br>(If it is 0 then it will last forever)</td>
+    </tr>
+    <tr>
+        <td>tweenType</td>
+        <td>String</td>
+        <td><code>LINEAR</code> | <code>SINE</code> | <code>QUINT</code> | <code>QUART</code> | <code>QUAD</code> | <code>EXPO</code> | <code>ELASTIC</code> | <code>CUBIC</code> | <code>CIRC</code> | <code>BOUNCE</code> | <code>BACK</code></td>
+    </tr>
+    <tr>
+        <td>easeType</td>
+        <td>String</td>
+        <td><code>IN</code> | <code>OUT</code> | <code>IN_OUT</code> | <code>OUT_IN</code></td>
+    </tr>
+</table>
+<strong>Sidenote: The Tween &amp; Ease types are CASE SENSITIVE so please write the exact text of your choice from the Description.</strong>
+<br></p>
+</li>
+</ul>
+<h2 id="openurl"><strong>openURL</strong></h2>
+<ul>
+<li>
+<p>This Function Was Made By GWebDev.</p>
+<p><strong>Format:</strong> <code>openURL url</code></p>
+<h4 id="arguments_5"><strong>Arguments:</strong></h4>
+<p><table>
+    <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <td>url</td>
+        <td>String</td>
+        <td>The URL you want to open.</td>
+    </tr>
+</table>
+<br></p>
+</li>
+</ul>
+<h2 id="print"><strong>print</strong></h2>
+<ul>
+<li>
+<p>This Function Was Made By GWebDev.</p>
+<p><strong>Format:</strong> <code>print message</code></p>
+<h4 id="arguments_6"><strong>Arguments:</strong></h4>
+<p><table>
+    <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <td>message</td>
+        <td>String</td>
+        <td>Prints a message to the console.<br>(Used for Debugging)</td>
+    </tr>
+</table>
+<br></p>
+</li>
+</ul></div>
+            </div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script>
+            var base_url = ".",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="js/base.js" defer></script>
+        <script src="search/main.js" defer></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+                <p>From here you can search these documents. Enter your search terms below.</p>
+                <form>
+                    <div class="form-group">
+                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results" data-no-results-text="No results found"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>
+
+<!--
+MkDocs version : 1.3.0
+Build Date UTC : 2022-06-24 02:35:19.512826+00:00
+-->

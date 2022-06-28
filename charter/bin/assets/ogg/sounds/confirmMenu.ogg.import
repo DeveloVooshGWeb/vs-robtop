@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/confirmMenu.ogg-194d0489aa1cd12835b26e58504872d2.oggstr"
+
+[deps]
+
+source_file="res://assets/ogg/sounds/confirmMenu.ogg"
+dest_files=[ "res://.import/confirmMenu.ogg-194d0489aa1cd12835b26e58504872d2.oggstr" ]
+
+[params]
+
+loop=true
+loop_offset=0
