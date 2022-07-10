@@ -39,6 +39,7 @@ func extify(a:String = "", b:String = "") -> String:
 	return b + "/" + a + "." + b;
 
 func getBytes(path:String = "", key:PoolByteArray = []) -> PoolByteArray:
+	path = path.to_lower();
 	for i in range(manifest.size()):
 		var curFilePath:String = manifest[i];
 		if (curFilePath.find(path) != -1):
@@ -55,8 +56,8 @@ func getBytes(path:String = "", key:PoolByteArray = []) -> PoolByteArray:
 				errNotFound();
 	return PoolByteArray([]);
 
-func getText(path:String = "", utf8:bool = false, lf:bool = false, type:String = "txt", key:PoolByteArray = []) -> String:
-	var byteArray:PoolByteArray = getBytes("data/" + path + ".txt", key);
+func getText(path:String = "", utf8:bool = false, lf:bool = false) -> String:
+	var byteArray:PoolByteArray = getBytes("data/" + path + ".txt");
 	var txtData:String = byteArray.get_string_from_ascii();
 	if (utf8):
 		txtData = byteArray.get_string_from_utf8();
@@ -64,8 +65,17 @@ func getText(path:String = "", utf8:bool = false, lf:bool = false, type:String =
 		return txtData.split("\r").join("");
 	return txtData;
 
-func getJson(path:String = "", utf8:bool = false, lf:bool = false, type:String = "txt", key:PoolByteArray = []) -> String:
-	var byteArray:PoolByteArray = getBytes("data/" + path + ".json", key);
+func getDat(path:String = "", utf8:bool = false, lf:bool = false) -> String:
+	var byteArray:PoolByteArray = getBytes("data/" + path + ".dat");
+	var txtData:String = byteArray.get_string_from_ascii();
+	if (utf8):
+		txtData = byteArray.get_string_from_utf8();
+	if (lf):
+		return txtData.split("\r").join("");
+	return txtData;
+
+func getSecText(path:String = "", utf8:bool = false, lf:bool = false, key:PoolByteArray = []) -> String:
+	var byteArray:PoolByteArray = getBytes("sec/data/" + path + ".sec", key);
 	var txtData:String = byteArray.get_string_from_ascii();
 	if (utf8):
 		txtData = byteArray.get_string_from_utf8();
@@ -95,7 +105,7 @@ func getAudio(path:String = "", key:PoolByteArray = []) -> AudioStreamOGGVorbis:
 	if (p.length() < 4):
 		return null;
 	var pExt:String = p.substr(p.length() - 4);
-	match pExt:
+	match (pExt):
 		".sec":
 			var oggArr:PoolByteArray = AES.decrypt(key, res[0]);
 			var ogg:AudioStreamOGGVorbis = AudioStreamOGGVorbis.new();

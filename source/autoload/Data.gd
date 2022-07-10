@@ -84,6 +84,43 @@ var platData:Dictionary = {
 	"theme": Color8(70, 60, 242, 255)
 }
 
+# Packs
+var packData:Array = [
+	{
+		"pack": "GWeb",
+		"color": Color8(0, 255, 125, 255),
+		"songs": 8,
+		"diff": 8
+	},
+	{
+		"pack": "Valen",
+		"color": Color8(0, 210, 255, 255),
+		"songs": 4,
+		"diff": 2
+	},
+	{
+		"pack": "Gamemaster",
+		"color": Color8(200, 225, 125, 255),
+		"songs": 6,
+		"diff": 4
+	}
+];
+
+# Selection Data
+var selectionData:Dictionary = {
+	"id": "GWeb",
+	"songs": [
+		"Rush",
+		"Vault",
+		"Chip",
+		"Harm",
+		"Warning",
+		"Enough",
+		"Loop",
+		"Out"
+	]
+};
+
 var curPath:String = "";
 
 func _ready():

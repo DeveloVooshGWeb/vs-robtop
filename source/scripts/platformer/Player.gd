@@ -9,7 +9,7 @@ export var rotation_velocity:float = 3;
 export var rotation_reset_speed:float = 6;
 
 export var slide_velocity:float = 24;
-export var slide_stop_velocity:float = 20;
+export var slide_stop_velocity:float = 24;
 export var slide_reset_threshold:float = 16;
 export var max_move_velocity:float = 512;
 
@@ -44,7 +44,7 @@ func _physics_process(delta):
 	# Modified This: https://godotengine.org/qa/90129/rotate-geometry-dash-style
 	if (on_floor):
 		start_rotating = false;
-	if (on_floor || !start_rotating):
+	if (on_floor || is_on_ceiling() || !start_rotating):
 		fix_rotation(delta);
 	else:
 		rotation += (rotation_velocity * curSign) * delta;
@@ -56,11 +56,6 @@ func fix_rotation(delta):
 		rotation += rotation_reset_speed * sign(rotDiff) * delta;
 	else:
 		rotation = targetRot;
-#	var rot:float = 0.0 + rotation;
-#	if (rot > targetRot):
-#		rot -= targetRot;
-#	if (abs(rot) < targetRot):
-#		rotation += (rotation_velocity * 2 * sign(rotation - 180)) * delta;
 
 func get_gravity() -> float:
 	return jump_gravity if velocity.y < 0.0 else fall_gravity;

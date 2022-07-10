@@ -8,8 +8,8 @@ signal mouseDoubleClick(index, pos);
 signal mouseDown(index, pos);
 signal mouseUp(index, pos);
 signal mouseDrag(index, pos);
+signal mouseScroll(index, pos);
 signal mouseMove(pos);
-signal mouseScroll(index);
 
 signal globalMouseDown(index, pos);
 signal globalMouseUp(index, pos);
@@ -44,8 +44,8 @@ func _input(evt):
 			var index:int = evt.button_index;
 			index -= 1;
 			var scrollStuff:int = index - 3;
+			var pos:Vector2 = evt.position;
 			if (index in range(3)):
-				var pos:Vector2 = evt.position;
 				held[index] = pressed;
 				index += 1;
 				match (pressed):
@@ -59,7 +59,7 @@ func _input(evt):
 						emit_signal("mouseUp", index, pos);
 						emit_signal("globalMouseUp", index, pos);
 			elif (scrollStuff in range(2)):
-				emit_signal("mouseScroll", scrollStuff);
+				emit_signal("mouseScroll", scrollStuff, pos);
 		elif (evt is InputEventMouseMotion):
 			emit_signal("mouseMove", evt.position);
 			emit_signal("globalMouseMove", evt.position);

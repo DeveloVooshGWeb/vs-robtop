@@ -18,6 +18,7 @@ var sceneExt:String = "tscn";
 var scn:String = "";
 var firstTime:bool = false;
 var stopListening:bool = false;
+var queueStopMusic:bool = false;
 
 var timerStarted:bool = false;
 var timerSecs:float = 3;
@@ -83,11 +84,14 @@ func _process(delta):
 func _chscn():
 	emit_signal("changingScene");
 	get_tree().change_scene_to(load(scn));
+	if (queueStopMusic):
+		Sound.stopAll();
 	if (!timerStarted):
 		fadeOut();
 	stopListening = false;
 
-func switch(inputScene:String):
+func switch(inputScene:String, stopMusic:bool = false):
+	queueStopMusic = stopMusic;
 	FPSCounter.get_node("FPSCanvas/FPS").visible = true;
 	Data.disableInput = false;
 	scn = defScenePath + inputScene + "." + sceneExt;

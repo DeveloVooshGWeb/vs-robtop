@@ -21,7 +21,8 @@ func init():
 	InputHandler.connect("mouseDown", self, "_onPressed");
 	InputHandler.connect("mouseDrag", self, "_onDrag");
 	InputHandler.connect("mouseUp", self, "_onReleased");
-	Assets.getText();
+	if (!weakref(BeatHandler.song).get_ref()):
+		BeatHandler.init(Sound.playMusic("rub", 0.5, true, "My secret key!!!".to_ascii()), 128);
 
 func _ready():
 	var thread:Thread = Thread.new();

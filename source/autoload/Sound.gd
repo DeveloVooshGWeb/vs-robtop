@@ -62,10 +62,16 @@ func stopSound(stream:AudioStream):
 					i.stop()
 
 func stopAll():
-	for i in get_children():
+	for i in $Sounds.get_children():
 		if (i):
 			if (i.name.begins_with("@")):
-				i.stop()
+				if (weakref(i).get_ref()):
+					i.queue_free();
+	for i in $Songs.get_children():
+		if (i):
+			if (i.name.begins_with("@")):
+				if (weakref(i).get_ref()):
+					i.queue_free();
 
 func setGCTime(GarbageCollectionWait):
 	$GCTimer.wait_time = GarbageCollectionWait
