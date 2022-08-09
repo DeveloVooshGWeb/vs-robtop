@@ -135,16 +135,19 @@ func loadSong():
 		voices.play();
 	BeatHandler.init(inst, bpm);
 
-func missed(props:Dictionary, misc:Dictionary):
-	health -= 0.075;
+func missed(props:Dictionary, misc:Dictionary, isEnemy:bool):
+	if (!isEnemy):
+		health -= 0.075;
 	pass;
 
-func hit(props:Dictionary, misc:Dictionary):
-	health += 0.05;
+func hit(props:Dictionary, misc:Dictionary, isEnemy:bool):
+	if (!isEnemy):
+		health += 0.05;
 	pass;
 
-func hold(props:Dictionary, misc:Dictionary):
-	health += 0.0075;
+func hold(props:Dictionary, misc:Dictionary, isEnemy:bool):
+	if (!isEnemy):
+		health += 0.0075;
 	pass;
 
 func justPressed(keyName:String):
@@ -158,9 +161,10 @@ func justPressed(keyName:String):
 					var notePos:float = note.position.y - note.misc.targetPos.y;
 					if (notePos - (note.size * note.scale).y <= 0 && notePos >= -(strum.size * strum.scale).y):
 						strum.confirm();
+						stage.confirm(key);
 						inputNotes.remove(inputNotes.find(note));
 						if (note.properties.noteLength <= 0.0):
-							hit(note.properties.duplicate(true), note.misc.duplicate(true));
+							hit(note.properties.duplicate(true), note.misc.duplicate(true), note.properties.col < 4);
 							noteTree.remove_child(note);
 							note.call_deferred("free");
 						else:
@@ -175,9 +179,10 @@ func pressed(keyName:String):
 		var holds:Array = holdList[key];
 		if (holds.size() > 0):
 			strum.confirmLoop();
+			stage.confirmLoop(key);
 			for hold in holds:
 				if (weakref(hold).get_ref()):
-					hold(hold.properties.duplicate(true), hold.misc.duplicate(true));
+					hold(hold.properties.duplicate(true), hold.misc.duplicate(true), hold.properties.col < 4);
 					hold.holdUpdate();
 				else:
 					holds.remove(holds.find(hold));
@@ -192,6 +197,7 @@ func justReleased(keyName:String):
 		holdList[key].empty();
 		var strum:Node2D = playerStrums[key];
 		strum.normal();
+		stage.normal();
 
 func loadIcons():
 	if (Data.icons.has(curSong)):
@@ -284,10 +290,11 @@ func updateNotes():
 		var sizeAdd:int = note.endSize.y;
 		if (!note.holdEnd.texture):
 			sizeAdd = note.size.y;
-		if (!inputNotes.has(note)):
+		var isEnemy:bool = note.properties.col < 4;
+		if (!isEnemy && !inputNotes.has(note)):
 			inputNotes.append(note);
 		if (note.position.y + note.holdEnd.offset.y + float(sizeAdd / 2) <= 0.0):
-			missed(note.properties.duplicate(true), note.misc.duplicate(true));
+			missed(note.properties.duplicate(true), note.misc.duplicate(true), isEnemy);
 			note.call_deferred("free");
 
 func _process(delta):

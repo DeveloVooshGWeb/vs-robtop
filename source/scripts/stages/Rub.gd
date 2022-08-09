@@ -6,12 +6,18 @@ onready var bg:Sprite = cam.get_node("BG");
 onready var gnd:Sprite = cam.get_node("Ground");
 
 onready var gf:AnimatedSprite = cam.get_node("GF/AnimatedSprite");
+onready var bf:AnimatedSprite = cam.get_node("BF/AnimatedSprite");
 onready var enemy:AnimatedSprite = cam.get_node("RobTop/AnimatedSprite");
 
 var stopEnemyIdle:bool = false;
 var curEnemyKey:int = 0;
 
 var isRight:bool = false;
+
+var keepHolding:bool = false;
+var holdKey:int = -1;
+var holdKeyMap:Array = ["left", "down", "up", "right"];
+var bfIdle = true;
 
 func col(col:Color):
 	bg.modulate = col;
@@ -20,18 +26,17 @@ func col(col:Color):
 func _ready():
 	col(Color8(50, 100, 95, 255));
 	enemy.play("idle");
-	gf.visible = false;
 	pass;
 
 func _process(delta):
-	if (!stopEnemyIdle):
-		if (!isRight):
-			if (enemy.frame >= 4):
-				enemy.frame = 0;
-		else:
-			if (enemy.frame <= 3):
-				enemy.frame = 4;
-	
+#	if (!stopEnemyIdle):
+#		if (!isRight):
+#			if (enemy.frame >= 4):
+#				enemy.stop();
+#		else:
+#			if (enemy.frame <= 3):
+#				enemy.stop();
+
 #	var keys:PoolStringArray = [
 #		"ui_up",
 #		"ui_left",
@@ -63,8 +68,11 @@ func _process(delta):
 #					enemy.frame = 0;
 #		stopEnemyIdle = true;
 #	elif (stopEnemyIdle && enemy.playing && enemy.animation != "idle" && enemy.frame >= 8):
-	enemy.play("idle");
-	stopEnemyIdle = false;
+#	stopEnemyIdle = false;
+	if (keepHolding && holdKeyMap.has(bf.animation) && bf.frame > 2):
+		bf.frame = 0;
+	if (bfIdle && holdKey < 0 && bf.frame > 6):
+		bf.play("idle");
 	pass;
 
 func stepHit(steps:int):
@@ -75,12 +83,36 @@ func beatHit(beats:int):
 		enemy.play("idle");
 	if (!isRight):
 		gf.play("danceLeft");
-		if (!stopEnemyIdle):
-			enemy.frame = 0;
+#		if (!stopEnemyIdle):
+#			enemy.frame = 0;
+#			enemy.play("idle");
 	else:
 		gf.play("danceRight");
-		if (!stopEnemyIdle):
-			enemy.frame = 4;
-	gf.frame = 0;
+#		if (!stopEnemyIdle):
+#			enemy.frame = 4;
+#			enemy.play("idle");
+	if (bf.animation == "idle"):
+		bf.frame = 0;
 	isRight = !isRight;
+	pass;
+
+func normal():
+	bfIdle = true;
+	keepHolding = false;
+	holdKey = -1;
+	pass;
+
+func confirmLoop(hk:int):
+	bfIdle = false;
+	keepHolding = true;
+	holdKey = hk;
+	bf.play(holdKeyMap[holdKey]);
+	pass;
+
+func confirm(hk:int):
+	bfIdle = false;
+	keepHolding = false;
+	holdKey = -1;
+	bf.play(holdKeyMap[hk]);
+	bf.frame = 0;
 	pass;
