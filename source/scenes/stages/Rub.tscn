@@ -29,4 +29,4 @@ texture = ExtResource( 6 )
 position = Vector2( -15, -7 )
 
 [node name="RobTop" parent="Cam" instance=ExtResource( 5 )]
-position = Vector2( -792, 262 )
+position = Vector2( -594, 242 )

@@ -109,14 +109,14 @@ animations = [ {
 "name": "2",
 "speed": 24.0
 }, {
-"frames": [ ExtResource( 67 ), ExtResource( 74 ), ExtResource( 87 ), ExtResource( 62 ), ExtResource( 88 ), ExtResource( 79 ), ExtResource( 98 ), ExtResource( 59 ), ExtResource( 94 ), ExtResource( 89 ), ExtResource( 95 ), ExtResource( 64 ), ExtResource( 86 ), ExtResource( 96 ), ExtResource( 56 ), ExtResource( 92 ), ExtResource( 63 ), ExtResource( 72 ), ExtResource( 93 ), ExtResource( 91 ), ExtResource( 66 ), ExtResource( 73 ), ExtResource( 69 ), ExtResource( 80 ), ExtResource( 97 ), ExtResource( 75 ), ExtResource( 81 ), ExtResource( 68 ), ExtResource( 99 ), ExtResource( 58 ), ExtResource( 100 ), ExtResource( 71 ) ],
-"loop": true,
-"name": "0",
-"speed": 24.0
-}, {
 "frames": [ ExtResource( 5 ), ExtResource( 31 ), ExtResource( 33 ), ExtResource( 32 ), ExtResource( 42 ), ExtResource( 25 ), ExtResource( 44 ), ExtResource( 11 ), ExtResource( 7 ), ExtResource( 43 ), ExtResource( 6 ), ExtResource( 8 ), ExtResource( 35 ), ExtResource( 23 ), ExtResource( 48 ), ExtResource( 16 ), ExtResource( 39 ), ExtResource( 9 ), ExtResource( 26 ), ExtResource( 40 ), ExtResource( 12 ), ExtResource( 47 ), ExtResource( 24 ), ExtResource( 34 ), ExtResource( 41 ), ExtResource( 36 ), ExtResource( 37 ), ExtResource( 45 ), ExtResource( 38 ), ExtResource( 27 ), ExtResource( 28 ), ExtResource( 10 ) ],
 "loop": true,
 "name": "1",
+"speed": 24.0
+}, {
+"frames": [ ExtResource( 67 ), ExtResource( 74 ), ExtResource( 87 ), ExtResource( 62 ), ExtResource( 88 ), ExtResource( 79 ), ExtResource( 98 ), ExtResource( 59 ), ExtResource( 94 ), ExtResource( 89 ), ExtResource( 95 ), ExtResource( 64 ), ExtResource( 86 ), ExtResource( 96 ), ExtResource( 56 ), ExtResource( 92 ), ExtResource( 63 ), ExtResource( 72 ), ExtResource( 93 ), ExtResource( 91 ), ExtResource( 66 ), ExtResource( 73 ), ExtResource( 69 ), ExtResource( 80 ), ExtResource( 97 ), ExtResource( 75 ), ExtResource( 81 ), ExtResource( 68 ), ExtResource( 99 ), ExtResource( 58 ), ExtResource( 100 ), ExtResource( 71 ) ],
+"loop": true,
+"name": "0",
 "speed": 24.0
 } ]
 
@@ -191,11 +191,11 @@ color = Color( 1, 0, 0, 1 )
 [node name="EnemyIcon" parent="HUDCam/HealthBar" instance=ExtResource( 3 )]
 scale = Vector2( 1.5, 1.5 )
 frames = ExtResource( 4 )
-frame = 28
+frame = 12
 character = "RobTop"
 
 [node name="PlayerIcon" parent="HUDCam/HealthBar" instance=ExtResource( 3 )]
 scale = Vector2( 1.5, 1.5 )
 frames = SubResource( 1 )
-frame = 12
+frame = 4
 flip_h = true

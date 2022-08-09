@@ -14,7 +14,7 @@ var selected:int = 0;
 var unselAlpha:float = 0.6;
 var selAlpha:float = 1.0;
 
-var itemHeight:int = 87;
+var itemHeight:int = 130 * 1.5;
 var itemCount:int = 0;
 
 var keyArr:Array = ["Up", "Down"];
@@ -43,6 +43,7 @@ func _ready():
 		label.theme.default_font = fnt;
 		label.modulate.a = unselAlpha;
 		label.text = song.to_upper();
+		label.rect_scale = Vector2.ONE * 1.5;
 		listContent.add_child(label);
 		i += 1;
 	itemCount += i;
