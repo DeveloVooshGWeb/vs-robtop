@@ -7,4 +7,5 @@
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 frames = ExtResource( 1 )
 animation = "danceLeft"
-frame = 12
+frame = 13
+playing = true

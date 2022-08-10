@@ -37,6 +37,7 @@ var defaultProperties:Dictionary = {
 var defaultMiscProperties:Dictionary = {
 	"targetPos": Vector2.ZERO,
 	"holdUpdate": false,
+	"steps": 0.0,
 	"time": 0.0,
 	"speed": 1.0,
 	"data": {}
@@ -76,7 +77,8 @@ var song:String = "";
 
 var loadData:Dictionary = {
 	"difficulty": 1,
-	"queue": ["warning"]
+	"queue": ["warning"],
+	"story": false
 };
 
 # Platformer shiz time

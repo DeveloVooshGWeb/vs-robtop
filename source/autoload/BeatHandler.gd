@@ -18,9 +18,6 @@ var steps:int = 0;
 var prevBeats:int = 0;
 var prevSteps:int = 0;
 
-var absBeats:float = 0;
-var absSteps:float = 0;
-
 var song:AudioStreamPlayer = null;
 var songFinished:bool = false;
 
@@ -28,6 +25,8 @@ var playing:bool = false;
 
 var beatSecs:float = 0;
 var stepSecs:float = 0;
+
+var songPos:float = 0;
 
 func setBPM(BPM:int = 130):
 	bpm = BPM;
@@ -50,10 +49,14 @@ func songInvalid() -> bool:
 		return true;
 	return !song.playing;
 
+func getSteps() -> float:
+	return getPosition() / stepSecs;
+
+func getBeats() -> float:
+	return getPosition() / stepSecs;
+
 func getPosition() -> float:
-	if (songInvalid()):
-		return 0.0;
-	return song.get_playback_position();
+	return songPos;
 
 func getLength() -> float:
 	if (songInvalid()):
@@ -64,17 +67,14 @@ func _ready():
 	pass;
 
 func _process(delta):
-	if (!songInvalid()):		
-		var songPos:float = getPosition();
+	if (!songInvalid()):
+		songPos = song.get_playback_position();
 		var songLen:float = getLength();
 	
 		var songMins:float = songPos / 60;
-		
-		absSteps = (bpm * 4) * songMins;
-		absBeats = absSteps / 4;
-		
-		steps = floor(absSteps)
-		beats = floor(absBeats);
+
+		steps = bpm * 4 * songMins;
+		beats = bpm * songMins;
 		
 		if (steps != prevSteps):
 			emit_signal("stepHit", steps);
@@ -83,8 +83,7 @@ func _process(delta):
 		
 		prevSteps = steps;
 		prevBeats = beats;
-		return;
-	if (songFinished):
+	elif (songFinished):
 		song = null;
-		bpm = 130;
+#		bpm = 130;
 	pass;

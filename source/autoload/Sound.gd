@@ -82,14 +82,14 @@ func _gc():
 			if (i.name.begins_with("@")):
 				if (i.playing != true):
 					i.queue_free();
-	for i in $Songs.get_children():
-		if (i):
-			if (i.name.begins_with("@")):
-				if (i.playing != true && !i.stream.loop):
-					if (i == BeatHandler.song):
-						BeatHandler.song = null;
-						BeatHandler.songFinished = true;
-					i.queue_free();
+#	for i in $Songs.get_children():
+#		if (i):
+#			if (i.name.begins_with("@")):
+#				if (i.playing != true && !i.stream.loop):
+#					if (i == BeatHandler.song):
+#						BeatHandler.song = null;
+#						BeatHandler.songFinished = true;
+#					i.queue_free();
 					
 func findSound(stream):
 	for i in $Sounds.get_children():

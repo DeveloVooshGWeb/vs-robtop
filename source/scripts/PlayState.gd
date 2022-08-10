@@ -15,7 +15,22 @@ var eventList:Array = [];
 var instPos:float = 0;
 var focuses:Array = [];
 var holdList:Array = [[], [], [], []];
-var keyMap:Array = ["Left", "Down", "Up", "Right"];
+var enemyHoldList:Array = [[], [], [], []];
+var noteAcceptThres:float = 0.1;
+var rsgCount:int = 0;
+var rsgMap:Array = ["nothing", "ready", "set", "go"];
+var rsgAudioMap:Array = ["intro3", "intro2", "intro1", "introGo"];
+var keyMap:Dictionary = {
+	"Left": 0,
+	"Down": 1,
+	"Up": 2,
+	"Right": 3,
+	
+	"D": 0,
+	"F": 1,
+	"J": 2,
+	"K": 3
+};
 
 var rng:RandomNumberGenerator = RandomNumberGenerator.new();
 
@@ -41,6 +56,10 @@ onready var enemyBar:ColorRect = healthBar.get_node("EnemyBar");
 onready var enemyIcon:AnimatedSprite = healthBar.get_node("EnemyIcon");
 onready var playerIcon:AnimatedSprite = healthBar.get_node("PlayerIcon");
 
+onready var rsgTimer:Timer = get_node("RSGTimer");
+onready var rsgTween:Tween = get_node("RSGTween");
+onready var rsg:AnimatedSprite = hudCam.get_node("RSG");
+
 var health:float = 1;
 var barSize:int = 888;
 var iconData:Dictionary = {
@@ -53,6 +72,7 @@ var enemyStrums:Array = [];
 var playerStrums:Array = [];
 var inst:AudioStreamPlayer = null;
 var voices:AudioStreamPlayer = null;
+var startedCountdown:bool = false;
 
 func initStrums():
 	for i in range(strumPositions.size()):
@@ -109,16 +129,19 @@ func loadChart():
 		var notes:Array = section.notes.duplicate(true);
 		notes.sort_custom(Chart, "noteRowSort");
 		for props in notes:
-			var noteTime:float = (float(i * 16) + (float(props.row) / Data.rowCap)) * BeatHandler.stepSecs;
+			var noteSteps:float = float(i * 16) + (float(props.row) / Data.rowCap);
+			var noteTime:float = noteSteps * BeatHandler.stepSecs;
 			if (props.col in range(8)):
 				noteList.append({
 					"props": props,
 					"targetPos": Vector2(strumPositions[props.col], strumY),
+					"steps": noteSteps,
 					"time": noteTime,
 					"speed": float(speed)
 				});
 			else:
 				eventList.append({
+					"steps": noteSteps,
 					"time": noteTime,
 					"events": GEVT.parse(props.evt)
 				})
@@ -130,14 +153,16 @@ func loadSong():
 	BeatHandler.connect("beatHit", self, "beatHit");
 	inst = Sound.loadMusic(curSong + "/Inst", 0, false);
 	voices = Sound.loadMusic(curSong + "/Voices", 0, false);
-	inst.play();
-	if (voices):
-		voices.play();
 	BeatHandler.init(inst, bpm);
+	BeatHandler.songPos = 0 - (BeatHandler.beatSecs * 5);
+	startedCountdown = true;
+	rsgTimer.start(BeatHandler.beatSecs);
 
 func missed(props:Dictionary, misc:Dictionary, isEnemy:bool):
 	if (!isEnemy):
 		health -= 0.075;
+		stage.bfMiss(props.col % 4);
+		Sound.play("missnote" + String(rng.randi_range(1, 3)), -12)
 	pass;
 
 func hit(props:Dictionary, misc:Dictionary, isEnemy:bool):
@@ -151,35 +176,52 @@ func hold(props:Dictionary, misc:Dictionary, isEnemy:bool):
 	pass;
 
 func justPressed(keyName:String):
-	var key:int = keyMap.find(keyName);
+	var key:int = -1;
+	if (keyMap.has(keyName)):
+		key = keyMap[keyName];
 	if (key in range(playerStrums.size())):
 		var strum:Node2D = playerStrums[key];
 		strum.press();
 		for note in inputNotes:
 			if (weakref(note).get_ref()):
-				if (note.properties.noteId == key):
-					var notePos:float = note.position.y - note.misc.targetPos.y;
-					if (notePos - (note.size * note.scale).y <= 0 && notePos >= -(strum.size * strum.scale).y):
+				var isEnemy:bool = note.properties.col < 4;
+				var notePos:float = note.position.y - note.misc.targetPos.y;
+				if (notePos - (note.size * note.scale).y <= 0 && notePos >= -(strum.size * strum.scale).y / 2):
+					if (note.properties.noteId == key):
 						strum.confirm();
-						stage.confirm(key);
+						stage.bfConfirm(key);
 						inputNotes.remove(inputNotes.find(note));
 						if (note.properties.noteLength <= 0.0):
-							hit(note.properties.duplicate(true), note.misc.duplicate(true), note.properties.col < 4);
+							hit(note.properties, note.misc, isEnemy);
 							noteTree.remove_child(note);
 							note.call_deferred("free");
 						else:
 							if (weakref(note.note).get_ref()):
 								note.note.call_deferred("free");
 							holdList[key].append(note);
+					else:
+						var exemption:bool = false;
+						var usedNote:Node2D = null;
+						for curNote in inputNotes:
+							if (weakref(curNote).get_ref()):
+								var stepDiff:float = note.misc.steps - curNote.misc.steps;
+								if (curNote.properties.noteId == key):
+									if (stepDiff >= 0 && stepDiff <= noteAcceptThres):
+										exemption = true;
+									break;
+						if (!exemption):
+							missed(note.properties, note.misc, isEnemy);
 
 func pressed(keyName:String):
-	var key:int = keyMap.find(keyName);
+	var key:int = -1;
+	if (keyMap.has(keyName)):
+		key = keyMap[keyName];
 	if (key in range(playerStrums.size())):
 		var strum:Node2D = playerStrums[key];
 		var holds:Array = holdList[key];
 		if (holds.size() > 0):
 			strum.confirmLoop();
-			stage.confirmLoop(key);
+			stage.bfConfirmLoop(key);
 			for hold in holds:
 				if (weakref(hold).get_ref()):
 					hold(hold.properties.duplicate(true), hold.misc.duplicate(true), hold.properties.col < 4);
@@ -192,12 +234,14 @@ func justReleased(keyName:String):
 		inst.playing = false;
 		voices.playing = false;
 		SceneTransition.switchAbsolute("res://charter/ChartingState");
-	var key:int = keyMap.find(keyName);
+	var key:int = -1;
+	if (keyMap.has(keyName)):
+		key = keyMap[keyName];
 	if (key in range(playerStrums.size())):
 		holdList[key].empty();
 		var strum:Node2D = playerStrums[key];
 		strum.normal();
-		stage.normal();
+		stage.bfNormal();
 
 func loadIcons():
 	if (Data.icons.has(curSong)):
@@ -217,6 +261,29 @@ func updateHealthBar():
 	enemyIcon.position.x = iconSpacing - iconData.offset;
 	playerIcon.position.x = iconSpacing + iconData.offset;
 
+func rsgUpdate():
+	if (rsgCount < 5):
+#		BeatHandler.songPos = 0 - (BeatHandler.stepSecs * (4 - rsgCount));
+		if (rsgCount < 4):
+			rsg.play(rsgMap[rsgCount]);
+			if (rsgCount > 0):
+				rsg.position = Vector2.ZERO;
+				rsg.modulate.a = 1.0;
+				rsgTween.remove_all();
+				rsgTween.interpolate_property(rsg, "position", Vector2.ZERO, Vector2(0, 25), BeatHandler.beatSecs, Tween.TRANS_CUBIC, Tween.EASE_IN_OUT);
+				rsgTween.interpolate_property(rsg, "modulate", Color.white, Color(1, 1, 1, 0), BeatHandler.beatSecs, Tween.TRANS_CUBIC, Tween.EASE_IN_OUT);
+				rsgTween.start();
+			Sound.play(rsgAudioMap[rsgCount], -12);
+		stage.beatHit(-1, true);
+		rsgCount += 1;
+		if (rsgCount >= 5):
+			startedCountdown = false;
+			inst.play();
+			if (voices):
+				voices.play();
+			rsgTimer.stop();
+	pass;
+
 func init():
 	initStrums();
 	if (Data.loadData.queue.size() <= 0):
@@ -235,6 +302,8 @@ func init():
 	Data.song = "" + curSong;
 	
 	initialized[0] = true;
+	
+	rsgTimer.connect("timeout", self, "rsgUpdate");
 	InputHandler.connect("justPressed", self, "justPressed");
 	InputHandler.connect("pressed", self, "pressed");
 	InputHandler.connect("justReleased", self, "justReleased");
@@ -249,9 +318,6 @@ func _ready():
 #	thread.start(self, "init");
 	init();
 	pass;
-
-func printIt(message:String):
-	print(message);
 
 func executeEvent(events:Array):
 	for event in events:
@@ -275,6 +341,7 @@ func updateNotes():
 			var note:Node2D = noteRes.instance();
 			note.properties = noteData.props;
 			note.misc.speed = noteData.speed;
+			note.misc.steps = noteData.steps;
 			note.misc.time = noteData.time;
 			note.misc.targetPos = noteData.targetPos;
 			note.position.x = note.misc.targetPos.x;
@@ -286,40 +353,72 @@ func updateNotes():
 
 	for note in noteTree.get_children():
 		instPos = BeatHandler.getPosition();
-		note.position.y = float(note.misc.targetPos.y - (instPos * 1000.0 - note.misc.time * 1000.0) * speed);
+#		note.position.y = float(note.misc.targetPos.y - (instPos * 1000.0 - note.misc.time * 1000.0) * speed);
+		note.position.y = float(note.misc.targetPos.y + ((note.misc.steps - BeatHandler.getSteps()) * (Data.noteSize * speed)));
 		var sizeAdd:int = note.endSize.y;
 		if (!note.holdEnd.texture):
 			sizeAdd = note.size.y;
 		var isEnemy:bool = note.properties.col < 4;
+		var col:int = note.properties.col % 4;
 		if (!isEnemy && !inputNotes.has(note)):
 			inputNotes.append(note);
-		if (note.position.y + note.holdEnd.offset.y + float(sizeAdd / 2) <= 0.0):
-			missed(note.properties.duplicate(true), note.misc.duplicate(true), isEnemy);
-			note.call_deferred("free");
+		elif (isEnemy):
+			if (note.misc.time <= instPos && col in range(enemyStrums.size())):
+				var strum:Node2D = enemyStrums[col];
+				var holds:Array = enemyHoldList[col];
+				if (!holds.has(note)):
+					strum.confirm();
+					stage.enmConfirm(col);
+					hit(note.properties, note.misc, isEnemy);
+					if (note.properties.noteLength <= 0.0):
+						strum.normal();
+						stage.enmNormal();
+						noteTree.remove_child(note);
+						note.call_deferred("free");
+					else:
+						if (weakref(note.note).get_ref()):
+							note.note.call_deferred("free");
+						holds.append(note);
+				else:
+					strum.confirmLoop();
+					stage.enmConfirmLoop(col);
+					hold(note.properties, note.misc, isEnemy);
+					note.holdUpdate();
+					var noteDead:bool = !weakref(note).get_ref();
+					if (!noteDead):
+						noteDead = note.dead;
+					if (noteDead):
+						strum.normal();
+						stage.enmNormal();
+						holds.remove(holds.find(note));
+		if (weakref(note).get_ref()):
+			if (note.position.y + note.holdEnd.offset.y + float(sizeAdd / 2) <= 0.0):
+				missed(note.properties, note.misc, isEnemy);
+				note.call_deferred("free");
 
 func _process(delta):
 	if (!initialized.has(false)):
-		if (inst):
+		if (startedCountdown):
+			BeatHandler.songPos += delta;
+			instPos = BeatHandler.getPosition();
+		elif (inst):
 			if (!BeatHandler.songFinished):
 				instPos = inst.get_playback_position();
 				if (voices):
 					var vocalPos:float = voices.get_playback_position();
 					if (abs(instPos - vocalPos) >= Data.vocalResetThreshold):
 						voices.seek(instPos);
-				updateEvents();
-				updateNotes();
-				updateHealthBar();
 			else:
 				voices = null;
 				inst = null;
+		updateEvents();
+		updateNotes();
+		updateHealthBar();
 	pass;
 
 func _fixed_process(delta):
 	queue_free();
 	pass;
-
-func openURL(uri:String):
-	OS.shell_open(uri);
 
 func stepHit(steps:int):
 	for strum in playerStrums:
@@ -333,3 +432,9 @@ func beatHit(beats:int):
 	if (stage):
 		stage.beatHit(beats);
 	pass;
+
+# CHARTER FUNCTIONS
+func printIt(message:String):
+	print(message);
+func openURL(uri:String):
+	OS.shell_open(uri);

@@ -9,15 +9,22 @@ onready var gf:AnimatedSprite = cam.get_node("GF/AnimatedSprite");
 onready var bf:AnimatedSprite = cam.get_node("BF/AnimatedSprite");
 onready var enemy:AnimatedSprite = cam.get_node("RobTop/AnimatedSprite");
 
-var stopEnemyIdle:bool = false;
 var curEnemyKey:int = 0;
 
 var isRight:bool = false;
 
-var keepHolding:bool = false;
-var holdKey:int = -1;
-var holdKeyMap:Array = ["left", "down", "up", "right"];
-var bfIdle = true;
+var bfIdle:bool = true;
+var bfHold:bool = false;
+var bfHoldKey:int = -1;
+var bfMissing:bool = false;
+
+var enmIdle:bool = true;
+var enmHold:bool = false;
+var enmHoldKey:int = -1;
+
+var keyMap:Array = ["left", "down", "up", "right"];
+
+var animMultiplier:float = 1;
 
 func col(col:Color):
 	bg.modulate = col;
@@ -25,6 +32,7 @@ func col(col:Color):
 
 func _ready():
 	col(Color8(50, 100, 95, 255));
+	bf.play("idle");
 	enemy.play("idle");
 	pass;
 
@@ -69,50 +77,95 @@ func _process(delta):
 #		stopEnemyIdle = true;
 #	elif (stopEnemyIdle && enemy.playing && enemy.animation != "idle" && enemy.frame >= 8):
 #	stopEnemyIdle = false;
-	if (keepHolding && holdKeyMap.has(bf.animation) && bf.frame > 2):
+	if (bf.animation == "idle"):
+		bf.speed_scale = BeatHandler.bpm / (90.0 / animMultiplier);
+	else:
+		bf.speed_scale = 1;
+	
+	if (enemy.animation == "idle"):
+		enemy.speed_scale = BeatHandler.bpm / (90.0 / animMultiplier);
+	else:
+		enemy.speed_scale = 1;
+	
+	if (bfHold && keyMap.has(bf.animation) && bf.frame > 1):
 		bf.frame = 0;
-	if (bfIdle && holdKey < 0 && bf.frame > 6):
+	
+	if (bfIdle && !bfHold && bf.animation != "idle" && bf.frame + 1 >= bf.frames.get_frame_count(bf.animation)):
 		bf.play("idle");
+		bf.frame = 0;
+	
+	if (enmHold && keyMap.has(enemy.animation) && enemy.frame > 1):
+		enemy.frame = 0;
+	
+	if (enmIdle && !enmHold && enemy.animation != "idle" && enemy.frame + 1 >= enemy.frames.get_frame_count(enemy.animation)):
+		enemy.play("idle");
+		enemy.frame = 0;
 	pass;
 
 func stepHit(steps:int):
 	pass;
 
-func beatHit(beats:int):
-	if (!stopEnemyIdle):
-		enemy.play("idle");
+func beatHit(beats:int, countdown:bool = false):
 	if (!isRight):
 		gf.play("danceLeft");
-#		if (!stopEnemyIdle):
-#			enemy.frame = 0;
-#			enemy.play("idle");
 	else:
 		gf.play("danceRight");
-#		if (!stopEnemyIdle):
-#			enemy.frame = 4;
-#			enemy.play("idle");
-	if (bf.animation == "idle"):
-		bf.frame = 0;
+	var bMod:int = int(1.0 / animMultiplier);
+	if (bMod < 1):
+		bMod = 1;
+	if (beats % bMod == 0):
+		if (bf.animation == "idle"):
+			bf.frame = 0;
+		if (enemy.animation == "idle"):
+			enemy.frame = 0;
 	isRight = !isRight;
 	pass;
 
-func normal():
+func bfNormal():
 	bfIdle = true;
-	keepHolding = false;
-	holdKey = -1;
+	bfHold = false;
+	bfHoldKey = -1;
 	pass;
 
-func confirmLoop(hk:int):
+func bfConfirmLoop(hk:int):
 	bfIdle = false;
-	keepHolding = true;
-	holdKey = hk;
-	bf.play(holdKeyMap[holdKey]);
+	bfHold = true;
+	bfHoldKey = hk;
+	bf.play(keyMap[bfHoldKey]);
 	pass;
 
-func confirm(hk:int):
+func bfConfirm(hk:int):
 	bfIdle = false;
-	keepHolding = false;
-	holdKey = -1;
-	bf.play(holdKeyMap[hk]);
+	bfHold = false;
+	bfHoldKey = -1;
+	bf.play(keyMap[hk]);
 	bf.frame = 0;
+	pass;
+
+func bfMiss(direction:int):
+	bfIdle = true;
+	bfHold = false;
+	bfHoldKey = -1;
+	bf.play(keyMap[direction] + "Miss");
+	pass;
+
+func enmNormal():
+	enmIdle = true;
+	enmHold = false;
+	enmHoldKey = -1;
+	pass;
+
+func enmConfirmLoop(hk:int):
+	enmIdle = false;
+	enmHold = true;
+	enmHoldKey = hk;
+	enemy.play(keyMap[enmHoldKey]);
+	pass;
+
+func enmConfirm(hk:int):
+	enmIdle = false;
+	enmHold = false;
+	enmHoldKey = -1;
+	enemy.play(keyMap[hk]);
+	enemy.frame = 0;
 	pass;

@@ -360,8 +360,6 @@ mode = 0
 access = 2
 filters = PoolStringArray( "*.bin" )
 show_hidden_files = true
-current_dir = "/Users"
-current_path = "/Users/"
 
 [node name="SaveDialog" type="FileDialog" parent="."]
 margin_top = 20.0
@@ -372,5 +370,3 @@ theme = SubResource( 7 )
 access = 2
 filters = PoolStringArray( "*.bin" )
 show_hidden_files = true
-current_dir = "/Users"
-current_path = "/Users/"

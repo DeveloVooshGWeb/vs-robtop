@@ -25,6 +25,8 @@ var holdPieceScale:float = 0;
 
 var loopConfirm:bool = false;
 
+var dead:bool = false;
+
 func normal():
 	var nid:int = properties.noteId;
 	if (properties.isStrum && nid in range(4)):
@@ -122,6 +124,7 @@ func holdUpdate():
 			holdEnd.modulate.a = holdPiece.modulate.a * (holdPiece.scale.y / holdPieceScale);
 			holdPiece.position.y = (pieceSize.y * holdPieceScale) - (pieceSize.y * holdPiece.scale.y);
 			if (holdPiece.scale.y <= 0):
+				dead = true;
 				call_deferred("free");
 
 func _ready():
