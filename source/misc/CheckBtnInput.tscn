@@ -112,6 +112,7 @@ script = ExtResource( 2 )
 margin_top = -24.0
 margin_right = 166.0
 margin_bottom = 24.0
+mouse_filter = 1
 custom_colors/font_color_disabled = Color( 1, 1, 1, 1 )
 custom_colors/font_color_focus = Color( 1, 1, 1, 1 )
 custom_colors/font_color_hover_pressed = Color( 1, 1, 1, 1 )

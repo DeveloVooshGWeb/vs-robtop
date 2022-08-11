@@ -7,7 +7,7 @@
 script = ExtResource( 2 )
 
 [node name="FPSCanvas" type="CanvasLayer" parent="."]
-layer = 126
+layer = 128
 
 [node name="FPS" type="Label" parent="FPSCanvas"]
 margin_left = 4.0

@@ -56,7 +56,7 @@ func playEase(easeId:String = "", invert:bool = false):
 			# easeList[easeId].elapsed = easeList[easeId].data.z - easeList[easeId].elapsed;
 
 func _ready():
-	SceneTransition.connect("changingScene", self, "clear");
+#	SceneTransition.connect("changingScene", self, "clear");
 	pass;
 
 func _process(delta):

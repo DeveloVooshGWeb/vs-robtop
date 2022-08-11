@@ -246,8 +246,11 @@ func playSong():
 	inst.play(pos);
 	if (voices):
 		voices.play(pos);
+	BeatHandler.songPos = pos;
+	BeatHandler.startPlaying();
 
 func pauseSong():
+	BeatHandler.stopPlaying();
 	inst.playing = false;
 	if (voices):
 		voices.playing = false;
@@ -350,7 +353,6 @@ func psPressed():
 
 func sncPressed():
 	if (sections.size() > cur.section):
-		print("hmm");
 		var notes:Dictionary = curNotes.duplicate(true);
 		var newNotes:Dictionary = {};
 		for key in notes.keys():
@@ -377,7 +379,7 @@ func snrPressed():
 		curSection.notes = newNotes.duplicate(true);
 		updateNotes();
 
-func _ready():
+func init():
 	InputHandler.connect("mouseMove", self, "onMove");
 	InputHandler.connect("mouseDown", self, "onClick");
 	InputHandler.connect("mouseScroll", self, "onScroll");
@@ -419,6 +421,11 @@ func _ready():
 	
 	if (Data.song != ""):
 		chartLoad("res://assets/data/charts/" + Data.song + "/1.bin");
+	pass;
+
+func _ready():
+	var thread:Thread = Thread.new();
+	thread.start(self, "init");
 	pass;
 
 func validSel() -> bool:

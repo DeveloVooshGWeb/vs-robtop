@@ -1,9 +1,13 @@
 extends Node2D
 
+onready var cam:Camera2D = get_node("Cam");
+onready var camCanvas:CanvasLayer = cam.get_node("CanvasLayer");
+onready var shaderRect:ColorRect = camCanvas.get_node("ShaderRect");
+onready var shaderTween:Tween = get_node("ShaderTween");
 onready var Easing = preload("res://Easing/Easing.gd");
 
-var t = 0;
-
+var shaderOffset:float = 4;
+var mouseSelected:String = "";
 var buttonList:Array = [
 	"PlayBtn",
 	"BonusSongsBtn",
@@ -12,8 +16,6 @@ var buttonList:Array = [
 	"CreditsBtn",
 ];
 
-var mouseSelected:String = "";
-
 func init():
 	EaseHandler.clear();
 	for btn in buttonList:
@@ -21,8 +23,18 @@ func init():
 	InputHandler.connect("mouseDown", self, "_onPressed");
 	InputHandler.connect("mouseDrag", self, "_onDrag");
 	InputHandler.connect("mouseUp", self, "_onReleased");
+	BeatHandler.connect("beatHit", self, "beatHit");
 	if (!weakref(BeatHandler.song).get_ref()):
 		BeatHandler.init(Sound.playMusic("rub", 0.5, true, "My secret key!!!".to_ascii()), 128);
+	BeatHandler.startPlaying();
+
+func beatHit(beats:int):
+	print(beats);
+	shaderTween.remove_all();
+	shaderRect.material.set_shader_param("offset", shaderOffset);
+	shaderTween.interpolate_property(shaderRect.material, "shader_param/offset", shaderOffset, 0.0, 0.25);
+	shaderTween.start();
+	pass;
 
 func _ready():
 	var thread:Thread = Thread.new();

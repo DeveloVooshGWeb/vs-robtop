@@ -43,9 +43,11 @@ func init():
 
 func placeBelow():
 	canvas.layer = -128;
+	canvas.visible = false;
 
 func placeAbove():
 	canvas.layer = 127;
+	canvas.visible = true;
 
 func fadeOut():
 	animationPlayer.play("fadeOut");

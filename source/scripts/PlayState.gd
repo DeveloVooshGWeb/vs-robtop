@@ -16,6 +16,8 @@ var instPos:float = 0;
 var focuses:Array = [];
 var holdList:Array = [[], [], [], []];
 var enemyHoldList:Array = [[], [], [], []];
+var enemyPressTimers:Array = [null, null, null, null];
+var enemyPressTime:float = 0.1;
 var noteAcceptThres:float = 0.1;
 var rsgCount:int = 0;
 var rsgMap:Array = ["nothing", "ready", "set", "go"];
@@ -155,6 +157,7 @@ func loadSong():
 	voices = Sound.loadMusic(curSong + "/Voices", 0, false);
 	BeatHandler.init(inst, bpm);
 	BeatHandler.songPos = 0 - (BeatHandler.beatSecs * 5);
+	BeatHandler.startPlaying();
 	startedCountdown = true;
 	rsgTimer.start(BeatHandler.beatSecs);
 
@@ -200,17 +203,18 @@ func justPressed(keyName:String):
 								note.note.call_deferred("free");
 							holdList[key].append(note);
 					else:
-						var exemption:bool = false;
-						var usedNote:Node2D = null;
-						for curNote in inputNotes:
-							if (weakref(curNote).get_ref()):
-								var stepDiff:float = note.misc.steps - curNote.misc.steps;
-								if (curNote.properties.noteId == key):
-									if (stepDiff >= 0 && stepDiff <= noteAcceptThres):
-										exemption = true;
-									break;
-						if (!exemption):
-							missed(note.properties, note.misc, isEnemy);
+						if (weakref(note.note).get_ref()):
+							var exemption:bool = false;
+							var usedNote:Node2D = null;
+							for curNote in inputNotes:
+								if (weakref(curNote).get_ref()):
+									var stepDiff:float = note.misc.steps - curNote.misc.steps;
+									if (curNote.properties.noteId == key):
+										if (stepDiff >= 0 && stepDiff <= noteAcceptThres):
+											exemption = true;
+										break;
+							if (!exemption):
+								missed(note.properties, note.misc, isEnemy);
 
 func pressed(keyName:String):
 	var key:int = -1;
@@ -263,7 +267,7 @@ func updateHealthBar():
 
 func rsgUpdate():
 	if (rsgCount < 5):
-#		BeatHandler.songPos = 0 - (BeatHandler.stepSecs * (4 - rsgCount));
+		BeatHandler.songPos = 0 - (BeatHandler.beatSecs * (4 - rsgCount));
 		if (rsgCount < 4):
 			rsg.play(rsgMap[rsgCount]);
 			if (rsgCount > 0):
@@ -333,6 +337,13 @@ func updateEvents():
 			executeEvent(eventData.events);
 			eventList.pop_front();
 
+func enmRelease(timer:Timer, idx:int):
+	enemyStrums[idx].normal();
+	stage.enmNormal();
+	timer.call_deferred("free");
+	enemyPressTimers[idx] = null;
+	pass;
+
 func updateNotes():
 	if (noteList.size() > 0):
 		var noteData:Dictionary = noteList[0];
@@ -371,10 +382,18 @@ func updateNotes():
 					stage.enmConfirm(col);
 					hit(note.properties, note.misc, isEnemy);
 					if (note.properties.noteLength <= 0.0):
-						strum.normal();
-						stage.enmNormal();
 						noteTree.remove_child(note);
 						note.call_deferred("free");
+						if (enemyPressTimers[col]):
+							enemyPressTimers[col].stop();
+							remove_child(enemyPressTimers[col]);
+							enemyPressTimers[col].call_deferred("free");
+						var timer:Timer = Timer.new();
+						timer.one_shot = true;
+						add_child(timer);
+						timer.connect("timeout", self, "enmRelease", [timer, col]);
+						enemyPressTimers[col] = timer;
+						timer.start(enemyPressTime);
 					else:
 						if (weakref(note.note).get_ref()):
 							note.note.call_deferred("free");
@@ -398,12 +417,9 @@ func updateNotes():
 
 func _process(delta):
 	if (!initialized.has(false)):
-		if (startedCountdown):
-			BeatHandler.songPos += delta;
-			instPos = BeatHandler.getPosition();
-		elif (inst):
+		if (!startedCountdown && inst):
 			if (!BeatHandler.songFinished):
-				instPos = inst.get_playback_position();
+				instPos = BeatHandler.getPosition();
 				if (voices):
 					var vocalPos:float = voices.get_playback_position();
 					if (abs(instPos - vocalPos) >= Data.vocalResetThreshold):

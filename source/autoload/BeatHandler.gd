@@ -27,6 +27,7 @@ var beatSecs:float = 0;
 var stepSecs:float = 0;
 
 var songPos:float = 0;
+var startedPlaying:bool = false;
 
 func setBPM(BPM:int = 130):
 	bpm = BPM;
@@ -34,6 +35,7 @@ func setBPM(BPM:int = 130):
 	stepSecs = beatSecs / 4.0;
 
 func init(SONG:AudioStreamPlayer = null, BPM:int = 130):
+	startedPlaying = false;
 	beats = 0;
 	steps = 0;
 	prevBeats = 0;
@@ -63,12 +65,24 @@ func getLength() -> float:
 		return 0.0;
 	return song.stream.get_length();
 
+func startPlaying():
+	startedPlaying = true;
+	pass;
+
+func stopPlaying():
+	startedPlaying = false;
+	pass;
+
 func _ready():
 	pass;
 
 func _process(delta):
+	if (startedPlaying):
+		songPos += delta;
 	if (!songInvalid()):
-		songPos = song.get_playback_position();
+		var actualPos:float = song.get_playback_position();
+		if (abs(round(actualPos - songPos)) >= Data.vocalResetThreshold):
+			songPos = actualPos;
 		var songLen:float = getLength();
 	
 		var songMins:float = songPos / 60;

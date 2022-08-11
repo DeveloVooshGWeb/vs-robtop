@@ -67,6 +67,7 @@ config/description="Mod/Fangame Made By:
 Breadward, Duckstuffed, Gamemaster, GWeb, MauveDash, ValenPratama, Fluffy, WikiThePedia & Sierra"
 run/main_scene="res://scenes/Main.tscn"
 config/use_custom_user_dir=true
+run/low_processor_mode=true
 run/delta_sync_after_draw=true
 boot_splash/image="res://daSplash.png"
 boot_splash/fullsize=false
@@ -88,7 +89,6 @@ output_latency.web=10
 Assets="*res://autoload/Assets.gd"
 Sound="*res://autoload/Sound.tscn"
 AES="*res://autoload/AES.gd"
-SceneTransition="*res://autoload/SceneTransition.tscn"
 BeatHandler="*res://autoload/BeatHandler.gd"
 Utils="*res://autoload/Utils.gd"
 EaseHandler="*res://autoload/EaseHandler.tscn"
@@ -99,6 +99,7 @@ FPSCounter="*res://autoload/FPSCounter.tscn"
 Chart="*res://autoload/Chart.gd"
 GEVT="*res://autoload/GEVT.gd"
 SaveManager="*res://autoload/SaveManager.gd"
+SceneTransition="*res://autoload/SceneTransition.tscn"
 
 [debug]
 
@@ -114,11 +115,6 @@ window/dpi/allow_hidpi=true
 window/per_pixel_transparency/allowed=true
 window/stretch/mode="2d"
 window/stretch/aspect="keep"
-
-[gui]
-
-timers/incremental_search_max_interval_msec=0
-timers/text_edit_idle_detect_sec=0.0
 
 [input]
 
@@ -143,4 +139,14 @@ quality/driver/fallback_to_gles2=true
 quality/intended_usage/framebuffer_allocation=0
 quality/intended_usage/framebuffer_allocation.mobile=0
 threads/thread_model=2
-quality/filters/use_fxaa=true
+quality/shadows/filter_mode=0
+quality/reflections/texture_array_reflections=false
+quality/reflections/high_quality_ggx=false
+quality/shading/force_vertex_shading=true
+quality/shading/force_lambert_over_burley=true
+quality/shading/force_blinn_over_ggx=true
+gles3/shaders/shader_compilation_mode=2
+gles3/shaders/shader_compilation_mode.mobile=2
+gles3/shaders/shader_compilation_mode.web=2
+quality/lightmapping/use_bicubic_sampling=false
+quality/depth/hdr=false
