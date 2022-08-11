@@ -421,9 +421,10 @@ func _process(delta):
 			if (!BeatHandler.songFinished):
 				instPos = BeatHandler.getPosition();
 				if (voices):
+					var instPlaybackPos:float = inst.get_playback_position();
 					var vocalPos:float = voices.get_playback_position();
-					if (abs(instPos - vocalPos) >= Data.vocalResetThreshold):
-						voices.seek(instPos);
+					if (abs(instPlaybackPos - vocalPos) >= Data.vocalResetThreshold):
+						voices.seek(instPlaybackPos);
 			else:
 				voices = null;
 				inst = null;

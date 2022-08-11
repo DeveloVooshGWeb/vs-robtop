@@ -9,7 +9,7 @@ var maxRowCap:float = 128;
 var maxNoteLength:float = 65.535;
 var maxScrollSpeed:float = 65.535;
 
-var vocalResetThreshold:float = 0.05;
+var vocalResetThreshold:float = 0.02;
 
 var defaultSectionProperties:Dictionary = {
 	"mustHitSection": true,

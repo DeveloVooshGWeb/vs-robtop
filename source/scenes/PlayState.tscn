@@ -192,13 +192,13 @@ color = Color( 1, 0, 0, 1 )
 [node name="EnemyIcon" parent="HUDCam/HealthBar" instance=ExtResource( 3 )]
 scale = Vector2( 1.5, 1.5 )
 frames = ExtResource( 4 )
-frame = 17
+frame = 5
 character = "RobTop"
 
 [node name="PlayerIcon" parent="HUDCam/HealthBar" instance=ExtResource( 3 )]
 scale = Vector2( 1.5, 1.5 )
 frames = SubResource( 1 )
-frame = 25
+frame = 1
 flip_h = true
 
 [node name="RSG" type="AnimatedSprite" parent="HUDCam"]
