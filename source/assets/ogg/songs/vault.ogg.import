@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/vault.ogg-e21c89294205a5631d978a9918c0039a.oggstr"
+
+[deps]
+
+source_file="res://assets/ogg/songs/vault.ogg"
+dest_files=[ "res://.import/vault.ogg-e21c89294205a5631d978a9918c0039a.oggstr" ]
+
+[params]
+
+loop=true
+loop_offset=0

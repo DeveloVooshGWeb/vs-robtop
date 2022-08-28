@@ -1,0 +1,106 @@
+[gd_scene load_steps=12 format=2]
+
+[ext_resource path="res://assets/png/gdBackgrounds/5.png" type="Texture" id=1]
+[ext_resource path="res://scripts/PlatformerState.gd" type="Script" id=2]
+[ext_resource path="res://assets/png/gdGrounds/5.png" type="Texture" id=3]
+[ext_resource path="res://scripts/platformer/Player.gd" type="Script" id=4]
+[ext_resource path="res://assets/png/gdIcons/cubes/4/1.png" type="Texture" id=5]
+[ext_resource path="res://assets/png/gdIcons/cubes/4/0.png" type="Texture" id=6]
+
+[sub_resource type="RectangleShape2D" id=2]
+resource_local_to_scene = true
+extents = Vector2( 1920, 192 )
+
+[sub_resource type="RectangleShape2D" id=3]
+extents = Vector2( 32, 540 )
+
+[sub_resource type="RectangleShape2D" id=4]
+extents = Vector2( 1920, 32 )
+
+[sub_resource type="RectangleShape2D" id=5]
+resource_local_to_scene = true
+extents = Vector2( 32, 540 )
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 48, 48 )
+
+[node name="PlatformerState" type="Node2D"]
+script = ExtResource( 2 )
+
+[node name="Cam" type="Camera2D" parent="."]
+position = Vector2( 960, 540 )
+current = true
+smoothing_enabled = true
+
+[node name="BG" type="Node2D" parent="."]
+position = Vector2( 1920, 1080 )
+
+[node name="Spr" type="Sprite" parent="BG"]
+position = Vector2( -960, -540 )
+scale = Vector2( 0.75, 0.75 )
+texture = ExtResource( 1 )
+offset = Vector2( 1280, -256 )
+region_enabled = true
+region_rect = Rect2( 0, 0, 5120, 2048 )
+
+[node name="Gnd" type="KinematicBody2D" parent="."]
+position = Vector2( 960, 1020 )
+motion/sync_to_physics = true
+
+[node name="Spr" type="Sprite" parent="Gnd"]
+scale = Vector2( 0.75, 0.75 )
+texture = ExtResource( 3 )
+offset = Vector2( 1280, 0 )
+region_enabled = true
+region_rect = Rect2( 0, 0, 5120, 512 )
+
+[node name="Collider" type="CollisionShape2D" parent="Gnd"]
+position = Vector2( 960, 0 )
+shape = SubResource( 2 )
+
+[node name="Barrier" type="KinematicBody2D" parent="."]
+position = Vector2( 960, 540 )
+
+[node name="Left" type="CollisionShape2D" parent="Barrier"]
+position = Vector2( -992, 0 )
+shape = SubResource( 3 )
+
+[node name="Up" type="CollisionShape2D" parent="Barrier"]
+position = Vector2( 960, -572 )
+shape = SubResource( 4 )
+
+[node name="Right" type="CollisionShape2D" parent="Barrier"]
+position = Vector2( 2912, 0 )
+shape = SubResource( 5 )
+
+[node name="Level" type="Node2D" parent="."]
+position = Vector2( 960, 540 )
+
+[node name="Player" type="KinematicBody2D" parent="."]
+position = Vector2( 48, 668 )
+scale = Vector2( 0.95, 0.95 )
+script = ExtResource( 4 )
+rotation_velocity = 3.5
+rotation_reset_speed = 7.0
+slide_velocity = 32.0
+slide_stop_velocity = 32.0
+max_move_velocity = 384.0
+jump_height = 144.0
+jump_time_to_peak = 0.25
+jump_time_to_descent = 0.2
+
+[node name="0" type="Sprite" parent="Player"]
+modulate = Color( 1, 0.890196, 0.00784314, 1 )
+scale = Vector2( 0.8, 0.8 )
+texture = ExtResource( 6 )
+
+[node name="1" type="Sprite" parent="Player"]
+modulate = Color( 0.435294, 1, 1, 1 )
+position = Vector2( 0, -6 )
+scale = Vector2( 0.8, 0.8 )
+texture = ExtResource( 5 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Player"]
+shape = SubResource( 1 )
+
+[node name="Timer" type="Timer" parent="."]

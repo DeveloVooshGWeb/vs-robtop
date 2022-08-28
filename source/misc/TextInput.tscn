@@ -1,0 +1,47 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://misc/TextInput.tres" type="DynamicFont" id=1]
+[ext_resource path="res://misc/TextInput.gd" type="Script" id=2]
+
+[sub_resource type="StyleBoxEmpty" id=3]
+
+[sub_resource type="StyleBoxEmpty" id=6]
+
+[sub_resource type="StyleBoxEmpty" id=5]
+resource_local_to_scene = true
+
+[node name="TextInput" type="Node2D"]
+script = ExtResource( 2 )
+
+[node name="Key" type="Label" parent="."]
+margin_left = -256.0
+margin_top = -20.0
+margin_bottom = 20.0
+custom_fonts/font = ExtResource( 1 )
+text = "Key:"
+align = 1
+
+[node name="TextField" type="LineEdit" parent="."]
+margin_top = -20.0
+margin_right = 256.0
+margin_bottom = 20.0
+mouse_filter = 1
+custom_colors/cursor_color = Color( 1, 1, 1, 1 )
+custom_colors/font_color_selected = Color( 0.0705882, 0.0941176, 0.105882, 1 )
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+custom_colors/font_color_uneditable = Color( 1, 1, 1, 1 )
+custom_fonts/font = ExtResource( 1 )
+custom_styles/read_only = SubResource( 3 )
+custom_styles/focus = SubResource( 6 )
+custom_styles/normal = SubResource( 5 )
+align = 1
+placeholder_text = "Placeholder"
+placeholder_alpha = 0.25
+caret_blink = true
+caret_blink_speed = 0.5
+
+[node name="Highlighter" type="ColorRect" parent="."]
+margin_top = 20.0
+margin_right = 256.0
+margin_bottom = 22.0
+color = Color( 0.752941, 0.752941, 0.752941, 1 )

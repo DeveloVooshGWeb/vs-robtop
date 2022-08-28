@@ -1,0 +1,20 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://assets/fonts/tres/fps.tres" type="DynamicFont" id=1]
+[ext_resource path="res://autoload/FPSCounter.gd" type="Script" id=2]
+
+[node name="FPSCounter" type="Node2D"]
+script = ExtResource( 2 )
+
+[node name="FPSCanvas" type="CanvasLayer" parent="."]
+layer = 128
+
+[node name="FPS" type="Label" parent="FPSCanvas"]
+margin_left = 4.0
+margin_top = 4.0
+margin_right = 132.0
+margin_bottom = 34.0
+custom_fonts/font = ExtResource( 1 )
+text = "FPS: 60"
+align = 1
+valign = 1
