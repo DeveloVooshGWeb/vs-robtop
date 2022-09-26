@@ -70,6 +70,7 @@ func _onReleased(index:int, pos:Vector2):
 				print("Go To Story Menu");
 			1:
 				print("Show The Bonus Songs");
+				SceneTransition.switch("PackState");
 			2:
 				print("Show The Player Stats");
 			3:

@@ -50,3 +50,4 @@ wait_time = 0.001
 [node name="RSGTween" type="Tween" parent="."]
 
 [node name="Stats" parent="." instance=ExtResource( 3 )]
+visible = false

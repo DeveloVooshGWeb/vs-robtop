@@ -14,6 +14,9 @@ var score:int = 0;
 var misses:int = 0;
 var health:float = 1;
 var accuracy:float = 0;
+var coins:int = 0;
+
+var finished:bool = false;
 
 var sigobashList:Node2D;
 var noteRes:Resource = Assets.getScene("notes/Note");
@@ -72,6 +75,8 @@ onready var playerIcon:AnimatedSprite = healthBar.get_node("PlayerIcon");
 onready var rsgTimer:Timer = get_node("RSGTimer");
 onready var rsgTween:Tween = get_node("RSGTween");
 onready var rsg:AnimatedSprite = hud.get_node("RSG");
+
+onready var stats:Node2D = get_node("Stats");
 
 var barSize:int = 888;
 var iconData:Dictionary = {
@@ -156,10 +161,19 @@ func loadChart():
 		i += 1;
 
 func endSong():
-	if (!SaveManager.songs[curSong]):
-		SaveManager.songs[curSong] = [0, 0, 0];
-	SaveManager.songs[curSong][difficulty] = score;
-	SaveManager.save();
+	Sound.stopAll();
+	finished = true;
+#	if (!SaveManager.songs[curSong]):
+#		SaveManager.songs[curSong] = [0, 0, 0];
+#	SaveManager.songs[curSong][difficulty] = score;
+#	SaveManager.save();
+	stats.init(score, misses, accuracy, coins);
+	stats.visible = true;
+	pass;
+
+func switchToNext():
+	if (finished):
+		SceneTransition.switch("MainMenuState");
 	pass;
 
 func loadSong():
@@ -218,6 +232,8 @@ func hit(props:Dictionary, misc:Dictionary, isEnemy:bool):
 					notesPassed += 0.25;
 					misses += 1;
 					hud.updMisses(misses);
+				"Coin":
+					coins += 1;
 			hud.updHealth(health);
 	pass;
 
@@ -445,6 +461,7 @@ func init():
 	InputHandler.connect("pressed", self, "pressed");
 	InputHandler.connect("justReleased", self, "justReleased");
 	SceneTransition.connect("finished", self, "_sceneLoaded");
+	stats.connect("finishedStats", self, "switchToNext");
 	
 	initialized[0] = true;
 	
@@ -550,7 +567,7 @@ func updateNotes():
 				note.call_deferred("free");
 
 func _process(delta):
-	if (!initialized.has(false)):
+	if (!initialized.has(false) && !finished):
 		if (!startedCountdown && inst):
 			if (!BeatHandler.songFinished):
 				instPos = BeatHandler.getPosition();

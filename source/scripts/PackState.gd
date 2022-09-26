@@ -74,6 +74,7 @@ func _release(ind:int, pos:Vector2):
 		reset = true;
 		if (selected >= 0):
 			print(selected);
+			SceneTransition.switch("SelectionState");
 			selected = -1;
 
 func packInit():

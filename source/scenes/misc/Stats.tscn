@@ -116,3 +116,7 @@ playback/speed = 0.5
 
 [node name="Timer" type="Timer" parent="."]
 wait_time = 0.5
+
+[node name="ProcTim" type="Timer" parent="."]
+wait_time = 5.0
+one_shot = true

@@ -1,5 +1,7 @@
 extends Node2D
 
+signal finishedStats();
+
 onready var gLabelPre:Label = get_node("GLabelPre");
 onready var gLabel:Label = get_node("GLabel");
 onready var sLabel:Label = get_node("SLabel");
@@ -9,6 +11,7 @@ onready var cLabel:Label = get_node("CLabel");
 onready var scaryOverlay:ColorRect = get_node("ScaryOverlay");
 onready var tween:Tween = get_node("Tween");
 onready var timer:Timer = get_node("Timer");
+onready var procTim:Timer = get_node("ProcTim");
 
 var curLabel:int = 0;
 
@@ -42,6 +45,10 @@ func init(s:int, m:int, a:float, c:int):
 			break;
 	initialized = true;
 	timer.start(animSpeed + 0.75);
+	pass;
+
+func callFinishedStats():
+	emit_signal("finishedStats");
 	pass;
 
 func processLabels():
@@ -140,13 +147,15 @@ func processLabels():
 					Sound.play("confirmMenu").pitch_scale = 0.2;
 	curLabel += 1;
 	if (curLabel > 4):
+		procTim.start(5);
 		timer.stop();
 	pass;
 
 func _ready():
 	gLabel.visible = false;
 	timer.connect("timeout", self, "processLabels");
-	init(100, 0, 100.0, 2);
+	procTim.connect("timeout", self, "callFinishedStats");
+	# init(100, 0, 100.0, 2);
 	pass;
 
 func _process(delta):

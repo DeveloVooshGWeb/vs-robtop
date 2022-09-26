@@ -27,6 +27,8 @@ var loopConfirm:bool = false;
 
 var dead:bool = false;
 
+var origNOffset:Vector2 = Vector2.ZERO;
+
 func normal():
 	var nid:int = properties.noteId;
 	if (properties.isStrum && nid in range(4)):
@@ -86,6 +88,7 @@ func init(opacity:float = 1):
 			note.frames = Assets.getSpriteFrames("notes/0_STR" + String(nid));
 			normal();
 			size = note.frames.get_frame(note.animation, note.frame).get_size();
+			origNOffset += note.offset;
 		else:
 			var nt:int = properties.noteType;
 			note.frames = Assets.getSpriteFrames("notes/" + String(nt) + "_N" + String(nid));
@@ -101,10 +104,10 @@ func init(opacity:float = 1):
 					endSize = holdEnd.texture.get_size();
 					holdPiece.region_rect.size = Vector2.ZERO + pieceSize;
 					holdEnd.region_rect.size = Vector2.ZERO + endSize;
-					holdPiece.offset.x = -(pieceSize.x / 2);
+					holdPiece.offset.x = -(pieceSize.x / 2.0);
 					holdPiece.scale.y = ((size.x * misc.speed) * properties.noteLength) / pieceSize.y;
 					holdPieceScale = 0.0 + holdPiece.scale.y;
-					holdEnd.offset.x = -(endSize.x / 2);
+					holdEnd.offset.x = -(endSize.x / 2.0);
 					holdEnd.offset.y = (holdPiece.scale.y * pieceSize.y) - (endSize.y / 2);
 					holdPiece.modulate.a = 0.0 + opacity;
 					holdEnd.modulate.a = 0.0 + holdPiece.modulate.a;
@@ -129,6 +132,16 @@ func holdUpdate():
 
 func _ready():
 	assignNodes();
+	pass;
+
+func _process(delta):
+	if (properties.isStrum):
+		if (weakref(note).get_ref()):
+			# Fix this GWebby
+			if (properties.noteId == 1 && note.animation.count("Confirm") > 0):
+				note.offset = origNOffset + (Vector2(6.5, 0) * scale);
+			else:
+				note.offset = origNOffset;
 	pass;
 
 func _fixed_process(delta):

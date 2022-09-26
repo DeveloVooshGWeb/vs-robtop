@@ -38,7 +38,7 @@ texture = ExtResource( 6 )
 position = Vector2( 1824, 546 )
 frames = ExtResource( 9 )
 animation = "idle"
-frame = 3
+frame = 11
 playing = true
 
 [node name="BGChars" type="AnimatedSprite" parent="."]
@@ -47,6 +47,7 @@ frames = ExtResource( 8 )
 animation = "idle"
 
 [node name="GF" parent="." instance=ExtResource( 4 )]
+visible = false
 position = Vector2( 960, 540 )
 
 [node name="BF" parent="." instance=ExtResource( 7 )]
