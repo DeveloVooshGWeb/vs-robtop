@@ -1,15 +1,19 @@
 [remap]
 
-importer="ogg_vorbis"
-type="AudioStreamOGGVorbis"
-path="res://.import/Inst.ogg-fe2702fab2b28109422a4cf1c115f3cf.oggstr"
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://2cjx5yw6n7dx"
+path="res://.godot/imported/Inst.ogg-fe2702fab2b28109422a4cf1c115f3cf.oggvorbisstr"
 
 [deps]
 
 source_file="res://assets/ogg/songs/tutorial/Inst.ogg"
-dest_files=[ "res://.import/Inst.ogg-fe2702fab2b28109422a4cf1c115f3cf.oggstr" ]
+dest_files=["res://.godot/imported/Inst.ogg-fe2702fab2b28109422a4cf1c115f3cf.oggvorbisstr"]
 
 [params]
 
 loop=true
 loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

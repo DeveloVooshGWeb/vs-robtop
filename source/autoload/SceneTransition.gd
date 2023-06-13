@@ -3,14 +3,14 @@ extends Node2D
 signal finished();
 signal changingScene();
 
-onready var canvas:CanvasLayer = get_node("Canvas");
-onready var parent:Node2D = canvas.get_node("Parent");
+@onready var canvas:CanvasLayer = get_node("Canvas");
+@onready var parent:Node2D = canvas.get_node("Parent");
 
-onready var animationPlayer:AnimationPlayer = parent.get_node("Anim");
-onready var text:Label = parent.get_node("Text");
-onready var timer:Timer = parent.get_node("Timer");
+@onready var animationPlayer:AnimationPlayer = parent.get_node("Anim");
+@onready var text:Label = parent.get_node("Text");
+@onready var timer:Timer = parent.get_node("Timer");
 
-var loadingTexts:PoolStringArray = [];
+var loadingTexts:PackedStringArray = [];
 
 var animList:Array = ["fadeIn", "fadeOut"];
 var defScenePath:String = "res://scenes/";
@@ -21,19 +21,19 @@ var stopListening:bool = false;
 var queueStopMusic:bool = false;
 
 var timerStarted:bool = false;
-var timerSecs:float = 3;
+var timerSecs:float = 1;
 
 func randomizeText():
 	text.text = loadingTexts[randi() % loadingTexts.size()];
 
 func _ready():
-	hide();
+	hideF();
 	firstTime = true;
 	loadingTexts = Assets.getText("loading", false, true).split("\n\n");
-	timer.connect("timeout", self, "timeout")
+	timer.connect("timeout", Callable(self, "timeout"))
 	pass
 
-func hide():
+func hideF():
 	parent.modulate.a = 0.0;
 
 func init():
@@ -61,7 +61,7 @@ func _process(delta):
 		var animName:String = animationPlayer.assigned_animation;
 		if (animName == ""):
 			placeBelow();
-			hide();
+			hideF();
 			return;
 		if (animationPlayer.current_animation_position >= 1.0):
 			match (animName):
@@ -69,23 +69,23 @@ func _process(delta):
 					var thread:Thread = Thread.new();
 					if (scn != null):
 						stopListening = true;
-						thread.start(self, "_chscn");
+						thread.start(Callable(self, "_chscn"));
 					elif (!timerStarted):
-						thread.start(self, "fadeOut");
+						thread.start(Callable(self, "fadeOut"));
 				"fadeOut":
 					text.text = "";
 					animationPlayer.play("RESET");
 					emit_signal("finished");
 				_:
 					placeBelow();
-					hide();
+					hideF();
 		elif (!animList.has(animName)):
 			placeBelow();
-			hide();
+			hideF();
 
 func _chscn():
 	emit_signal("changingScene");
-	get_tree().change_scene_to(load(scn));
+	get_tree().change_scene_to_packed(load(scn));
 	if (queueStopMusic):
 		Sound.stopAll();
 	if (!timerStarted):
@@ -98,14 +98,14 @@ func switch(inputScene:String, stopMusic:bool = false):
 	Data.disableInput = false;
 	scn = defScenePath + inputScene + "." + sceneExt;
 	var thread:Thread = Thread.new();
-	thread.start(self, "fadeIn");
+	thread.start(Callable(self, "fadeIn"));
 
 func switchAbsolute(inputScene:String):
 	FPSCounter.get_node("FPSCanvas/FPS").visible = true;
 	Data.disableInput = false;
 	scn = inputScene + "." + sceneExt;
 	var thread:Thread = Thread.new();
-	thread.start(self, "fadeIn");
+	thread.start(Callable(self, "fadeIn"));
 
 func switchWithText(inputScene:String):
 	FPSCounter.get_node("FPSCanvas/FPS").visible = true;

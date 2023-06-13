@@ -1,17 +1,17 @@
 extends Node2D
 
-onready var cam:Camera2D = get_node("Cam");
+@onready var cam:Camera2D = get_node("Cam");
 
-onready var bg:Sprite = get_node("BG");
-onready var gnd:Sprite = get_node("Ground");
+@onready var bg:Sprite2D = get_node("BG");
+@onready var gnd:Sprite2D = get_node("Ground");
 
-onready var bgChars:AnimatedSprite = get_node("BGChars");
+@onready var bgChars:AnimatedSprite2D = get_node("BGChars");
 
-onready var gf:AnimatedSprite = get_node("GF/AnimatedSprite");
-onready var bf:AnimatedSprite = get_node("BF/AnimatedSprite");
-onready var enemy:AnimatedSprite = get_node("RobTop/AnimatedSprite");
+@onready var gf:AnimatedSprite2D = get_node("GF/AnimatedSprite2D");
+@onready var bf:AnimatedSprite2D = get_node("BF/AnimatedSprite2D");
+@onready var enemy:AnimatedSprite2D = get_node("RobTop/AnimatedSprite2D");
 
-onready var fgChars:AnimatedSprite = get_node("FGChars");
+@onready var fgChars:AnimatedSprite2D = get_node("FGChars");
 
 var camPos:Vector2 = Vector2.ZERO;
 
@@ -38,7 +38,7 @@ func col(col:Color):
 	gnd.modulate = col;
 
 func _ready():
-	camPos = cam.get_camera_screen_center();
+	camPos = cam.get_screen_center_position();
 	bg.modulate = Color8(35, 65, 255, 255);
 	bg.scrollFactor = Vector2(0.9, 1);
 	bg.basePosition = camPos;
@@ -69,7 +69,7 @@ func _process(delta):
 		if (enemy.speed_scale != speedScale):
 			enemy.speed_scale = 1;
 	
-	camPos = cam.get_camera_screen_center();
+	camPos = cam.get_screen_center_position();
 	
 	bg.curPosition = camPos;
 	fgChars.curPosition = camPos;
@@ -77,14 +77,14 @@ func _process(delta):
 	if (bfHold && keyMap.has(bf.animation) && bf.frame > 1):
 		bf.frame = 0;
 	
-	if ((bfIdle || !bfHold) && bf.animation != "idle" && bf.frame + 1 >= bf.frames.get_frame_count(bf.animation)):
+	if ((bfIdle || !bfHold) && bf.animation != "idle" && bf.frame + 1 >= bf.sprite_frames.get_frame_count(bf.animation)):
 		bf.play("idle");
 		bf.frame = 0;
 	
 	if (enmHold && keyMap.has(enemy.animation) && enemy.frame > 1):
 		enemy.frame = 0;
 	
-	if ((enmIdle || !enmHold) && enemy.animation != "idle" && enemy.frame + 1 >= enemy.frames.get_frame_count(enemy.animation)):
+	if ((enmIdle || !enmHold) && enemy.animation != "idle" && enemy.frame + 1 >= enemy.sprite_frames.get_frame_count(enemy.animation)):
 		enemy.play("idle");
 		enemy.frame = 0;
 	pass;

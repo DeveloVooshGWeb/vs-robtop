@@ -1,13 +1,13 @@
 extends Node2D
 
-onready var list:Node2D = get_node("List");
-onready var listContent:Node2D = list.get_node("ListContent");
+@onready var list:Node2D = get_node("List");
+@onready var listContent:Node2D = list.get_node("ListContent");
 
-onready var hud:Node2D = get_node("HUD");
-onready var icon:AnimatedSprite = hud.get_node("Icon");
-onready var percent:Label = hud.get_node("Percent");
+@onready var hud:Node2D = get_node("HUD");
+@onready var icon:AnimatedSprite2D = hud.get_node("Icon");
+@onready var percent:Label = hud.get_node("Percent");
 
-var fnt:BitmapFont = load("res://assets/fonts/alphabet.tres");
+var fnt:FontFile = load("res://assets/fonts/alphabet.tres");
 
 var selected:int = 0;
 
@@ -34,20 +34,20 @@ func _ready():
 	var i:int = 0;
 	for song in Data.selectionData.songs:
 		var label:Label = Label.new();
-		label.align = Label.ALIGN_LEFT;
-		label.valign = Label.VALIGN_CENTER;
-		label.rect_size.x = 1280;
-		label.rect_size.y = itemHeight;
-		label.rect_position.y = i * itemHeight;
+		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT;
+		label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER;
+		label.size.x = 1280;
+		label.size.y = itemHeight;
+		label.position.y = i * itemHeight;
 		label.theme = Theme.new();
 		label.theme.default_font = fnt;
 		label.modulate.a = unselAlpha;
 		label.text = song.to_upper();
-		label.rect_scale = Vector2.ONE * 1.5;
+		label.scale = Vector2.ONE * 1.5;
 		listContent.add_child(label);
 		i += 1;
 	itemCount += i;
-	InputHandler.connect("justPressed", self, "_jp");
+	InputHandler.connect("justPressed", Callable(self, "_jp"));
 	pass;
 
 func _physics_process(delta):

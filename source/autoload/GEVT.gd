@@ -5,7 +5,7 @@ var delimiters:Array = [["\"", "\""], ["[", "]"], ["{", "}"]];
 
 func parse(code:String) -> Array:
 	var events:Array = [];
-	var lines:PoolStringArray = code.split("\r").join("").split("\n");
+	var lines:PackedStringArray = str("").join(code.split("\r")).split("\n");
 	for line in lines:
 		line = line.strip_edges();
 		if (line != "" && !line.begins_with("#")):
@@ -36,7 +36,7 @@ func parse(code:String) -> Array:
 								var curDelimiter:String = delimiter[1];
 								if (text.ends_with(curDelimiter + " ")):
 									text = text.strip_edges().substr(0, text.length() - curDelimiter.length());
-									args.append(str2var(delimiter[0] + text + delimiter[1]));
+									args.append(str_to_var(delimiter[0] + text + delimiter[1]));
 									text = "";
 									delimiterProperties.delimiter = "";
 									delimiterProperties.flag = 0;
@@ -45,7 +45,7 @@ func parse(code:String) -> Array:
 					if (text != ""):
 						if (args.size() <= 0):
 							function = "" + text;
-						args.append(str2var("" + text));
+						args.append(str_to_var("" + text));
 						text = "";
 			if (text != ""):
 				if (args.size() <= 0):

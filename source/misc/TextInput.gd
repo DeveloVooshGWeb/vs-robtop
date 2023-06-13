@@ -1,18 +1,18 @@
-tool
+@tool
 extends Node2D
 
 signal entered(data);
 
-onready var label:Label = get_node("Key");
-onready var input:LineEdit = get_node("TextField");
-onready var highlighter:ColorRect = get_node("Highlighter");
+@onready var label:Label = get_node("Key");
+@onready var input:LineEdit = get_node("TextField");
+@onready var highlighter:ColorRect = get_node("Highlighter");
 
-export(String) var key:String = "Key" setget setKey;
-export(String) var placeholder:String = "Placeholder" setget setPH;
-export(String) var defaultValue:String = "" setget setDV;
-export(float) var leftSpacing:float = 256.0 setget setLeftSpacing;
-export(float) var rightSpacing:float = 256.0 setget setRightSpacing;
-export(float) var highlightSpeed:float = 0.3 setget setHS;
+@export var key:String = "Key": set = setKey;
+@export var placeholder:String = "Placeholder": set = setPH;
+@export var defaultValue:String = "": set = setDV;
+@export var leftSpacing:float = 256.0: set = setLeftSpacing;
+@export var rightSpacing:float = 256.0: set = setRightSpacing;
+@export var highlightSpeed:float = 0.3: set = setHS;
 var tweenType:int = Tween.TRANS_SINE;
 var easeType:int = Tween.EASE_OUT;
 var defaultData:Dictionary = {};
@@ -32,7 +32,7 @@ var data:Dictionary = {
 	}
 };
 
-var saved:Color = Color.white;
+var saved:Color = Color.WHITE;
 #var unsaved:Color = Color8(39, 197, 246, 255);
 # var unsaved:Color = Color8(128, 211, 237, 255);
 var unsaved:Color = Color8(129, 129, 129, 255);
@@ -48,7 +48,7 @@ func focus_exited():
 	Data.disableInput = false;
 	focused = false;
 
-func entered(txt:String = ""):
+func enteredF(txt:String = ""):
 	parseData(txt);
 	emit_signal("entered", data);
 
@@ -60,7 +60,9 @@ func parseData(txt:String = ""):
 	data.int.normal = int(floor(data.float));
 	data.int.rounded = int(round(data.float));
 	
-	var parsed:JSONParseResult = JSON.parse(data.str.trimmed);
+	var test_json_conv = JSON.new()
+	test_json_conv.parse(data.str.trimmed);
+	var parsed:JSON = test_json_conv.get_data()
 	if (parsed.error == OK):
 		match (typeof(parsed.result)):
 			TYPE_DICTIONARY:
@@ -71,8 +73,8 @@ func parseData(txt:String = ""):
 func unfocus():
 	input.release_focus();
 
-func text_entered(txt:String = ""):
-	entered(txt);
+func text_submitted(txt:String = ""):
+	enteredF(txt);
 	unfocus();
 
 func clicked(index, pos):
@@ -81,33 +83,33 @@ func clicked(index, pos):
 
 func _ready():
 	defaultData = data;
-	input.connect("focus_entered", self, "focus_entered");
-	input.connect("focus_exited", self, "focus_exited");
-	input.connect("text_changed", self, "text_changed");
-	input.connect("text_entered", self, "text_entered");
-	InputHandler.connect("globalMouseUp", self, "clicked");
+	input.connect("focus_entered", Callable(self, "focus_entered"));
+	input.connect("focus_exited", Callable(self, "focus_exited"));
+	input.connect("text_changed", Callable(self, "text_changed"));
+	input.connect("text_submitted", Callable(self, "text_submitted"));
+	InputHandler.connect("globalMouseUp", Callable(self, "clicked"));
 	_fixData();
 	pass;
 
 func updateHighlighter():
-	if (!saved):
-		saved = Color.white;
-	if (!unsaved):
+	if (saved != null):
+		saved = Color.WHITE;
+	if (unsaved != null):
 		unsaved = Color8(129, 129, 129, 255);
 	if (!focused):
-		input.add_color_override("font_color", saved);
+		input.add_theme_color_override("font_color", saved);
 		highlighter.self_modulate = saved;
 		return;
-	input.add_color_override("font_color", unsaved);
+	input.add_theme_color_override("font_color", unsaved);
 	highlighter.self_modulate = unsavedHighlight;
 
 func _fixData():
-	label.rect_position.x = -leftSpacing;
-	label.rect_size.x = leftSpacing;
-	input.rect_position.x = 0;
-	input.rect_size.x = rightSpacing;
-	highlighter.rect_position.x = 0;
-	highlighter.rect_size.x = rightSpacing;
+	label.position.x = -leftSpacing;
+	label.size.x = leftSpacing;
+	input.position.x = 0;
+	input.size.x = rightSpacing;
+	highlighter.position.x = 0;
+	highlighter.size.x = rightSpacing;
 	label.text = key + ":";
 	input.placeholder_text = placeholder;
 	input.text = defaultValue;
@@ -118,7 +120,7 @@ func _process(delta):
 	pass;
 
 func _draw():
-	if (Engine.editor_hint):
+	if (Engine.is_editor_hint()):
 		if (!label):
 			label = get_node("Key");
 		if (!input):

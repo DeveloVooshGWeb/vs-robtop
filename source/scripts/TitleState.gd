@@ -3,10 +3,10 @@ extends Node2D
 var initialized:Array = [false, false];
 var isLeft:bool = false;
 
-onready var charDanceTitle:Node2D = get_node("CharCanvas/Char/charDanceTitle/AnimatedSprite");
-onready var logoBumpin:AnimatedSprite = get_node("LogoCanvas/Logo/logoBumpin/AnimatedSprite");
-onready var titleEnter:AnimatedSprite = get_node("TitleEnter");
-onready var enterTimer:Timer = get_node("EnterTimer");
+@onready var charDanceTitle:Node2D = get_node("CharCanvas/Char/charDanceTitle/AnimatedSprite2D");
+@onready var logoBumpin:AnimatedSprite2D = get_node("LogoCanvas/Logo/logoBumpin/AnimatedSprite2D");
+@onready var titleEnter:AnimatedSprite2D = get_node("TitleEnter");
+@onready var enterTimer:Timer = get_node("EnterTimer");
 
 var switching:bool = false;
 
@@ -15,20 +15,20 @@ func _initialize():
 	charDanceTitle.play("danceLeft");
 	logoBumpin.play("default");
 	
-	enterTimer.connect("timeout", self, "_switch");
+	enterTimer.connect("timeout", Callable(self, "_switch"));
 	
 	initialized[0] = true;
-	SceneTransition.connect("finished", self, "_sceneLoaded");
+	SceneTransition.connect("finished", Callable(self, "_sceneLoaded"));
 	SceneTransition.init();
 
 func _ready():
 	var thread:Thread = Thread.new();
-	thread.start(self, "_initialize");
+	thread.start(Callable(self, "_initialize"));
 	pass;
 
 func _sceneLoaded():
-	BeatHandler.init(Sound.playMusic("rub", 0.5, true, "My secret key!!!".to_ascii()), 128);
-	BeatHandler.connect("beatHit", self, "beatHit");
+	BeatHandler.init(Sound.playMusic("rub", 0.5, true, true, "My secret key!!!".to_ascii_buffer()), 128);
+	BeatHandler.connect("beatHit", Callable(self, "beatHit"));
 	initialized[1] = true;
 
 func beatHit(curBeat:int):

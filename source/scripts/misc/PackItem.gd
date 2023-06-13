@@ -1,20 +1,20 @@
-tool
+@tool
 extends Node2D
 
-export(Color) var col:Color = Color8(255, 255, 255, 255) setget setCol;
-export(String) var packName:String = "" setget setPackName;
-export(int) var completed:int = 0 setget setCompleted;
-export(int) var songs:int = 0 setget setSongs;
-export(int) var tableType:int = 0 setget setTableType;
-export(int) var difficulty:int = 0 setget setDiff;
+@export var col:Color = Color8(255, 255, 255, 255) : set = setCol;
+@export var packName:String = "": set = setPackName;
+@export var completed:int = 0: set = setCompleted;
+@export var songs:int = 0: set = setSongs;
+@export var tableType:int = 0: set = setTableType;
+@export var difficulty:int = 0: set = setDiff;
 
-onready var table:AnimatedSprite = get_node("Table");
-onready var diffIcon:AnimatedSprite = get_node("DiffIcon");
-onready var title:Label = get_node("Title");
-onready var bar:Sprite = get_node("Bar");
-onready var progress:Label = get_node("Progress");
-onready var check:Sprite = get_node("Check");
-onready var viewBtn:Sprite = get_node("ViewBtn");
+@onready var table:AnimatedSprite2D = get_node("Table");
+@onready var diffIcon:AnimatedSprite2D = get_node("DiffIcon");
+@onready var title:Label = get_node("Title");
+@onready var bar:Sprite2D = get_node("Bar");
+@onready var progress:Label = get_node("Progress");
+@onready var check:Sprite2D = get_node("Check");
+@onready var viewBtn:Sprite2D = get_node("ViewBtn");
 
 func setCol(val):
 	col = val;
@@ -62,7 +62,7 @@ func _ready():
 	pass;
 
 func _draw():
-	if (Engine.editor_hint):
+	if (Engine.is_editor_hint()):
 		if (!table):
 			table = get_node("Table");
 		if (!diffIcon):

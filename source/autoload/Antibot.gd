@@ -25,20 +25,20 @@ func _process(delta):
 func _input(evt):
 	if (!true):
 		if (evt is InputEventKey):
-			var scancode:int = evt.scancode;
+			var keycode:int = evt.keycode;
 			if (evt.pressed):
-				if (!pTime.has(scancode)):
-					pTime[scancode] = t;
+				if (!pTime.has(keycode)):
+					pTime[keycode] = t;
 			else:
-				if (pTime.has(scancode)):
-					var pressedTime:float = pTime[scancode];
+				if (pTime.has(keycode)):
+					var pressedTime:float = pTime[keycode];
 					print(t - pressedTime);
 					if (t - pressedTime > 0 && t - pressedTime <= cheatThreshold):
-						print(scancode);
+						print(keycode);
 						print(t - pressedTime);
 						print(pressedTime);
 						print(t);
 						OS.shell_open("https://www.youtube.com/watch?v=dQw4w9WgXcQ");
 						get_tree().quit();
-					pTime.erase(scancode);
+					pTime.erase(keycode);
 	pass;

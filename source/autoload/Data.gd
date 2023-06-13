@@ -50,7 +50,7 @@ var defaultMiscProperties:Dictionary = {
 	"data": {}
 }
 
-var noteVariants:PoolStringArray = [
+var noteVariants:PackedStringArray = [
 	"Default",
 	"BadNoteDragon",
 	"BadNoteFuzz",
@@ -154,6 +154,9 @@ var selectionData:Dictionary = {
 	]
 };
 
+# Game Over State
+var goState:int = 1;
+
 func ColorHSV(h:float = 360, s:float = 0, v:float = 100, a:float = 1) -> Dictionary:
 	# stol-
 	# i mean borrowed and modified from https://www.reddit.com/r/godot/comments/ajll6t/create_color_from_hsv_values/
@@ -231,7 +234,7 @@ func ColorHSV(h:float = 360, s:float = 0, v:float = 100, a:float = 1) -> Diction
 var curPath:String = "";
 
 func _ready():
-	var curPathArr:PoolStringArray = OS.get_executable_path().split("/");
-	curPathArr.remove(curPathArr.size() - 1);
-	curPath = curPathArr.join("/") + "/";
+	var curPathArr:PackedStringArray = OS.get_executable_path().split("/");
+	curPathArr.remove_at(curPathArr.size() - 1);
+	curPath = "/".join(curPathArr) + "/";
 	pass

@@ -4,18 +4,18 @@ extends Node2D
 #signal spawn(data);
 
 var noteContainer:CenterContainer;
-var note:AnimatedSprite;
-var holdPiece:Sprite;
-var holdEnd:Sprite;
+var note:AnimatedSprite2D;
+var holdPiece:Sprite2D;
+var holdEnd:Sprite2D;
 
 var properties:Dictionary = Data.defaultProperties.duplicate(true);
 var misc:Dictionary = Data.defaultMiscProperties.duplicate(true);
 
 var size:Vector2 = Vector2.ZERO;
 
-var noteIdAnims:PoolStringArray = ["left", "down", "up", "right"];
-var strumIdAnims:PoolStringArray = ["strumLeft", "strumDown", "strumUp", "strumRight"];
-var strumModifiers:PoolStringArray = ["Press", "Confirm"];
+var noteIdAnims:PackedStringArray = ["left", "down", "up", "right"];
+var strumIdAnims:PackedStringArray = ["strumLeft", "strumDown", "strumUp", "strumRight"];
+var strumModifiers:PackedStringArray = ["Press", "Confirm"];
 
 var initialized:bool = false;
 
@@ -28,6 +28,12 @@ var loopConfirm:bool = false;
 var dead:bool = false;
 
 var origNOffset:Vector2 = Vector2.ZERO;
+var strumOffsets:Array = [
+	Vector2(1.25, -0.75),
+	Vector2(6.25, -0.5),
+	Vector2(1.25, -0.25),
+	Vector2(1.25, 0)
+];
 
 func normal():
 	var nid:int = properties.noteId;
@@ -85,17 +91,17 @@ func init(opacity:float = 1):
 	if (properties.col >= 0 && properties.col < 8):
 		var nid:int = properties.noteId;
 		if (properties.isStrum):
-			note.frames = Assets.getSpriteFrames("notes/0_STR" + String(nid));
+			note.sprite_frames = Assets.getSpriteFrames("notes/0_STR" + str(nid));
 			normal();
-			size = note.frames.get_frame(note.animation, note.frame).get_size();
+			size = note.sprite_frames.get_frame_texture(note.animation, note.frame).get_size();
 			origNOffset += note.offset;
 		else:
 			var nt:int = properties.noteType;
-			note.frames = Assets.getSpriteFrames("notes/" + String(nt) + "_N" + String(nid));
+			note.sprite_frames = Assets.getSpriteFrames("notes/" + str(nt) + "_N" + str(nid));
 			if (nid in range(noteIdAnims.size())):
 				var anim:String = noteIdAnims[nid];
 				note.play(anim);
-				size = note.frames.get_frame(note.animation, note.frame).get_size();
+				size = note.sprite_frames.get_frame_texture(note.animation, note.frame).get_size();
 				if (properties.noteLength > 0.0):
 					var np:String = Assets.assetPath + "png/notes/";
 					holdPiece.texture = load(np + anim + "Piece.png");
@@ -132,16 +138,6 @@ func holdUpdate():
 
 func _ready():
 	assignNodes();
-	pass;
-
-func _process(delta):
-	if (properties.isStrum):
-		if (weakref(note).get_ref()):
-			# Fix this GWebby
-			if (properties.noteId == 1 && note.animation.count("Confirm") > 0):
-				note.offset = origNOffset + (Vector2(6.5, 0) * scale);
-			else:
-				note.offset = origNOffset;
 	pass;
 
 func _fixed_process(delta):

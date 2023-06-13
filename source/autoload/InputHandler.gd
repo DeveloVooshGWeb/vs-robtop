@@ -30,7 +30,7 @@ func _process(delta):
 func _input(evt):
 	if (!Data.disableInput):
 		if (evt is InputEventKey):
-			var key:String = OS.get_scancode_string(evt.get_scancode_with_modifiers());
+			var key:String = OS.get_keycode_string(evt.get_keycode_with_modifiers());
 			if (evt.pressed):
 				if (!keys.has(key)):
 					emit_signal("justPressed", key);
@@ -38,7 +38,7 @@ func _input(evt):
 				return;
 			if (keys.has(key)):
 				emit_signal("justReleased", key);
-				keys.remove(keys.find(key));
+				keys.erase(key);
 		elif (evt is InputEventMouseButton):
 			var pressed:bool = evt.pressed;
 			var index:int = evt.button_index;
@@ -50,7 +50,7 @@ func _input(evt):
 				index += 1;
 				match (pressed):
 					true:
-						if (evt.doubleclick):
+						if (evt.double_click):
 							emit_signal("mouseDoubleClick", index, pos);
 						emit_signal("mouseDown", index, pos);
 						emit_signal("globalMouseDown", index, pos);

@@ -1,15 +1,19 @@
 [remap]
 
-importer="ogg_vorbis"
-type="AudioStreamOGGVorbis"
-path="res://.import/scrollMenu.ogg-1e1e974db70efdea51898b5dadb10322.oggstr"
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://b5myqmqdhmpmu"
+path="res://.godot/imported/scrollMenu.ogg-1e1e974db70efdea51898b5dadb10322.oggvorbisstr"
 
 [deps]
 
 source_file="res://assets/ogg/sounds/scrollMenu.ogg"
-dest_files=[ "res://.import/scrollMenu.ogg-1e1e974db70efdea51898b5dadb10322.oggstr" ]
+dest_files=["res://.godot/imported/scrollMenu.ogg-1e1e974db70efdea51898b5dadb10322.oggvorbisstr"]
 
 [params]
 
 loop=true
 loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

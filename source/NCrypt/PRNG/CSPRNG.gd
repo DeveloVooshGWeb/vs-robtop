@@ -34,8 +34,8 @@ class_name CSPRNG
 
 var _cipher					= CHACHA._ChaChaBlockCipher.new()
 var _rounds	: int			= 20
-var _kstate	: PoolByteArray = PoolByteArray()
-var _cstate	: PoolByteArray	= PoolByteArray()
+var _kstate	: PackedByteArray = PackedByteArray()
+var _cstate	: PackedByteArray	= PackedByteArray()
 
 # ==============================================================================
 # CSPRNG
@@ -57,7 +57,7 @@ func _init(a_rounds:int = 20) -> void:
 		
 	# initial seeding
 	# seed with 2x state size = 768 bits
-	var ent:PoolByteArray = PoolByteArray()
+	var ent:PackedByteArray = PackedByteArray()
 	ent.resize(96)
 	for i in range(0, ent.size(), 4):
 		var r:int = randi()
@@ -78,11 +78,11 @@ func _inc_cstate() -> void:
 	return
 
 # populates the _blk array with the encrypted counter value and increments the counter
-func _gen_block() -> PoolByteArray:
+func _gen_block() -> PackedByteArray:
 	assert(_kstate.size() > 0)
 	
 	# get next 128 bits from chacha20 keystream
-	var blk:PoolByteArray = _cipher.chacha20_block(_kstate, _cstate, 0, _rounds)
+	var blk:PackedByteArray = _cipher.chacha20_block(_kstate, _cstate, 0, _rounds)
 	blk.resize(16)
 	
 	# encrypt counter with keystream to create 128 bit fortuna block
@@ -102,7 +102,7 @@ Add entropy to the PRNG.
 Parameters
 a_ent	:	Entropy to add.
 """
-func add_entropy(a_ent:PoolByteArray) -> void:
+func add_entropy(a_ent:PackedByteArray) -> void:
 	# generate new key by securely combining with supplied entropy
 	_kstate = SHA256.hash_raw(_kstate + a_ent)
 	_inc_cstate()
@@ -117,13 +117,13 @@ a_len	:	Desired size of buffer. Up to 1Mb.
 
 Return	:	Initialised buffer.
 """
-func rand_raw(a_len:int) -> PoolByteArray:
+func rand_raw(a_len:int) -> PackedByteArray:
 	assert(a_len > 0)
 	assert(a_len < 0x100000)
 	assert(_kstate.size() > 0)
 	
 	# append random bits to output buffer until it is large enough
-	var op:PoolByteArray = PoolByteArray()
+	var op:PackedByteArray = PackedByteArray()
 	while (op.size() < a_len):
 		op.append_array(_gen_block())
 
@@ -141,7 +141,7 @@ Return a cryptographically secure random 64 bit integer.
 Return	:	random 64 bit integer.
 """
 func rand_64() -> int:
-	var rb:PoolByteArray = rand_raw(8)
+	var rb:PackedByteArray = rand_raw(8)
 	
 	var r:int = 0
 	for i in range(8): r = (r << 8) | (rb[i] & 0xff)

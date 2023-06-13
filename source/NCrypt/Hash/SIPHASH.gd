@@ -46,7 +46,7 @@ a_outlen	:	Output hash length in bytes. Must be 8 or 16 (64 or 128 bits).
 
 Return		:	SipHash of input buffer, encoded as a Base64 string.
 """
-static func hash_base64(a_in:PoolByteArray, a_ky:PoolByteArray, a_crounds:int = 2, a_drounds:int = 4, a_outlen:int = 8) -> String:
+static func hash_base64(a_in:PackedByteArray, a_ky:PackedByteArray, a_crounds:int = 2, a_drounds:int = 4, a_outlen:int = 8) -> String:
 	return Marshalls.raw_to_base64(hash_raw(a_in, a_ky, a_crounds, a_drounds, a_outlen))
 
 
@@ -64,7 +64,7 @@ a_outlen	:	Output hash length in bytes. Must be 8 or 16 (64 or 128 bits).
 
 Return		:	SipHash of input buffer, encoded as a hexadecimal string.
 """
-static func hash_hex(a_in:PoolByteArray, a_ky:PoolByteArray, a_crounds:int = 2, a_drounds:int = 4, a_outlen:int = 8) -> String:
+static func hash_hex(a_in:PackedByteArray, a_ky:PackedByteArray, a_crounds:int = 2, a_drounds:int = 4, a_outlen:int = 8) -> String:
 	return NCrypt.raw_to_hex(hash_raw(a_in, a_ky, a_crounds, a_drounds, a_outlen))
 
 
@@ -82,7 +82,7 @@ a_outlen	:	Output hash length in bytes. Must be 8 or 16 (64 or 128 bits).
 
 Return		:	SipHash of input buffer.
 """
-static func hash_raw(a_in:PoolByteArray, a_ky:PoolByteArray, a_crounds:int = 2, a_drounds:int = 4, a_outlen:int = 8) -> PoolByteArray:
+static func hash_raw(a_in:PackedByteArray, a_ky:PackedByteArray, a_crounds:int = 2, a_drounds:int = 4, a_outlen:int = 8) -> PackedByteArray:
 	assert(a_ky.size() == 16)
 	assert(a_outlen == 8 || a_outlen == 16)
 	
@@ -180,7 +180,7 @@ static func hash_raw(a_in:PoolByteArray, a_ky:PoolByteArray, a_crounds:int = 2, 
 	b = v0 ^ v1 ^ v2 ^ v3
 
 	# create return hash
-	var op:PoolByteArray = PoolByteArray()
+	var op:PackedByteArray = PackedByteArray()
 	for i in NCrypt.U64_SHIFTS_INV:
 		op.append((b >> i) & 0xff)
 	

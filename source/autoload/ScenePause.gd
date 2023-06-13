@@ -1,13 +1,13 @@
 extends Node2D
 
-onready var canvas = get_node("Canvas");
-onready var pauseScreen = canvas.get_node("PauseScreen");
-onready var label = pauseScreen.get_node("Label");
+@onready var canvas = get_node("Canvas");
+@onready var pauseScreen = canvas.get_node("PauseScreen");
+@onready var label = pauseScreen.get_node("Label");
 
 var labelBase:String = "GAME PAUSED";
-var labelList:PoolStringArray = [];
+var labelList:PackedStringArray = [];
 
-var easeName:String = "PauseAlpha";
+var tweener:CustomFloatTweener;
 var easeTime:float = 0.5;
 
 func randomizeLabelText():
@@ -15,22 +15,27 @@ func randomizeLabelText():
 
 func _notification(what):
 	match (what):
-		MainLoop.NOTIFICATION_WM_FOCUS_OUT:
+		MainLoop.NOTIFICATION_APPLICATION_FOCUS_OUT:
 			get_tree().paused = true;
-			EaseHandler.setEase(easeName, 0, 1, easeTime, "Expo", "EaseOut", true);
-			EaseHandler.playEase(easeName);
+			if (tweener.inverted):
+				tweener._target = 1;
+				tweener.play();
 			randomizeLabelText();
-		MainLoop.NOTIFICATION_WM_FOCUS_IN:
+		MainLoop.NOTIFICATION_APPLICATION_FOCUS_IN:
 			get_tree().paused = false;
-			EaseHandler.setV2(easeName, EaseHandler.getEase(easeName));
-			EaseHandler.playEase(easeName, true);
+			if (!tweener.inverted):
+				tweener._target = tweener.current();
+				tweener.play_invert();
 
 func _ready():
 	labelList = Assets.getText("pauseScreen", false, true).split("\n\n");
+	tweener = CustomFloatTweener.new(0, 0, easeTime, Tween.TRANS_EXPO, Tween.EASE_OUT, Tween.TWEEN_PAUSE_PROCESS);
+	tweener.inverted = true;
+	add_child(tweener);
 	pass
 
 func _process(delta):
-	var alpha:float = EaseHandler.getEase(easeName);
+	var alpha:float = tweener.current();
 	pauseScreen.modulate.a = alpha;
 	if (alpha <= 0):
 		canvas.layer = -128;

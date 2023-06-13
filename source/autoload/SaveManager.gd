@@ -1,7 +1,7 @@
 extends Node
 
 var savePath:String = "rub.save";
-var save:Dictionary = {
+var saveData:Dictionary = {
 	"version": 1.0,
 	"vault": {
 		"unlocked": false,
@@ -11,26 +11,26 @@ var save:Dictionary = {
 };
 
 func save():
-	var f:File = File.new();
-	var err:bool = f.open_compressed("user://" + savePath, File.WRITE, File.COMPRESSION_ZSTD) != OK;
-	if (!err):
-		var json:String = JSON.print(save);
+	var f = FileAccess.open_compressed("user://" + savePath, FileAccess.WRITE, FileAccess.COMPRESSION_ZSTD);
+	if (f != null && f.get_open_error() == OK):
+		var json:String = JSON.stringify(save);
 		f.store_string(json);
 		f.close();
 
 func _ready():
-	var f:File = File.new();
-	var err:bool = f.open_compressed("user://" + savePath, File.READ, File.COMPRESSION_ZSTD) != OK;
-	if (!err):
-		var res:JSONParseResult = JSON.parse(f.get_as_text());
+	var f = FileAccess.open_compressed("user://" + savePath, FileAccess.READ, FileAccess.COMPRESSION_ZSTD);
+	if (f != null && f.get_open_error() == OK):
+		var test_json_conv = JSON.new()
+		test_json_conv.parse(f.get_as_text());
+		var res:JSON = test_json_conv.get_data()
 		f.close();
 		if (res.error == OK):
 			if (res.result is Dictionary):
 				var result:Dictionary = res.result;
 				if (result.has("version")):
-					if (save.version == result.version):
-						for key in save.keys():
+					if (saveData.version == result.version):
+						for key in saveData.keys():
 							if (result.has(key)):
-								if (typeof(save[key]) == typeof(result[key])):
-									save[key] = result[key];
+								if (typeof(saveData[key]) == typeof(result[key])):
+									saveData[key] = result[key];
 	pass;

@@ -1,9 +1,9 @@
 extends Node2D
 
-onready var tableBG:Sprite = get_node("TableBG");
-onready var table:Node2D = get_node("Table");
-onready var tableContent:Node2D = table.get_node("TableContent");
-onready var frameHeight:int = 334;
+@onready var tableBG:Sprite2D = get_node("TableBG");
+@onready var table:Node2D = get_node("Table");
+@onready var tableContent:Node2D = table.get_node("TableContent");
+@onready var frameHeight:int = 334;
 
 var packItem:Resource = Assets.getScene("misc/PackItem");
 var scrolling:bool = false;
@@ -81,7 +81,7 @@ func packInit():
 	for i in range(Data.packData.size()):
 		var pack:Dictionary = Data.packData[i];
 		var tableType:int = i % 2;
-		var packNode:Node2D = packItem.instance();
+		var packNode:Node2D = packItem.instantiate();
 		packNode.col = pack.color;
 		packNode.packName = pack.pack;
 		packNode.songs = pack.songs;
@@ -89,7 +89,7 @@ func packInit():
 		packNode.difficulty = pack.diff;
 		packNode.position.y = i * 256;
 		tableContent.add_child(packNode);
-		var viewBtn:Sprite = packNode.get_node("ViewBtn");
+		var viewBtn:Sprite2D = packNode.get_node("ViewBtn");
 		var anim:String = "View" + str(i);
 		EaseHandler.setEase(anim, 1.5, 2.0, 0.35, "Bounce", "EaseOut");
 		packs.append({
@@ -104,12 +104,12 @@ func _ready():
 #	var img = $ViewportContainer/Viewport.get_texture().get_data();
 #	img.flip_y();
 #	img.save_png("fg.png");
-	EaseHandler.clear();
+#	EaseHandler.clear();
 	packInit();
-	InputHandler.connect("mouseDown", self, "_tap");
-	InputHandler.connect("mouseDrag", self, "_drag");
-	InputHandler.connect("mouseScroll", self, "_scroll");
-	InputHandler.connect("mouseUp", self, "_release");
+	InputHandler.connect("mouseDown", Callable(self, "_tap"));
+	InputHandler.connect("mouseDrag", Callable(self, "_drag"));
+	InputHandler.connect("mouseScroll", Callable(self, "_scroll"));
+	InputHandler.connect("mouseUp", Callable(self, "_release"));
 	pass;
 
 func _physics_process(delta):

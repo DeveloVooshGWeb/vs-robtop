@@ -1,11 +1,10 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=3 format=3 uid="uid://c2tntvaupybt7"]
 
-[ext_resource path="res://scripts/misc/HealthIcon.gd" type="Script" id=1]
-[ext_resource path="res://assets/res/healthIcons/BF.res" type="SpriteFrames" id=2]
+[ext_resource type="Script" path="res://scripts/misc/HealthIcon.gd" id="1"]
+[ext_resource type="SpriteFrames" path="res://assets/res/healthIcons/BF.res" id="2"]
 
-[node name="HealthIcon" type="AnimatedSprite"]
-frames = ExtResource( 2 )
-animation = "0"
-frame = 27
-playing = true
-script = ExtResource( 1 )
+[node name="HealthIcon" type="AnimatedSprite2D"]
+sprite_frames = ExtResource("2")
+animation = &"0"
+frame = 22
+script = ExtResource("1")

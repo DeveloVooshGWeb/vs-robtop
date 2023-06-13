@@ -37,7 +37,7 @@ Encrypt a buffer using the CHACHA scheme and encode as Base64.
 The counter value is treated as either a 32 or 64 bit big endian integer
 depending on if the initialisation vector is 96 or 64 bits respectively.
 
-Reference CHACHA specifies 8/12/20 rounds and a 64 bit initialisation vector.
+RefCounted CHACHA specifies 8/12/20 rounds and a 64 bit initialisation vector.
 RFC7539 CHACHA specifies 20 rounds and a 96 bit initialisation vector.
 
 Parameters
@@ -49,7 +49,7 @@ a_rounds:	Number of CHACHA rounds 8/12/20
 
 Return	:	Encrypted buffer, same length as input buffer, encoded as a Base64 string.
 """
-static func encrypt_base64(a_in:PoolByteArray, a_ky:PoolByteArray, a_iv:PoolByteArray, a_ctr:int = 1, a_rounds:int = 20) -> String:
+static func encrypt_base64(a_in:PackedByteArray, a_ky:PackedByteArray, a_iv:PackedByteArray, a_ctr:int = 1, a_rounds:int = 20) -> String:
 	return Marshalls.raw_to_base64(encrypt_raw(a_in, a_ky, a_iv, a_ctr, a_rounds))
 
 
@@ -59,7 +59,7 @@ Encrypt a buffer using the CHACHA scheme and encode as hexadecimal.
 The counter value is treated as either a 32 or 64 bit big endian integer
 depending on if the initialisation vector is 96 or 64 bits respectively.
 
-Reference CHACHA specifies 8/12/20 rounds and a 64 bit initialisation vector.
+RefCounted CHACHA specifies 8/12/20 rounds and a 64 bit initialisation vector.
 RFC7539 CHACHA specifies 20 rounds and a 96 bit initialisation vector.
 
 Parameters
@@ -71,7 +71,7 @@ a_rounds:	Number of CHACHA rounds 8/12/20
 
 Return	:	Encrypted buffer, same length as input buffer, encoded as a hexadecimal string.
 """
-static func encrypt_hex(a_in:PoolByteArray, a_ky:PoolByteArray, a_iv:PoolByteArray, a_ctr:int = 1, a_rounds:int = 20) -> String:
+static func encrypt_hex(a_in:PackedByteArray, a_ky:PackedByteArray, a_iv:PackedByteArray, a_ctr:int = 1, a_rounds:int = 20) -> String:
 	return NCrypt.raw_to_hex(encrypt_raw(a_in, a_ky, a_iv, a_ctr, a_rounds))
 
 
@@ -81,7 +81,7 @@ Encrypt a buffer using the CHACHA scheme.
 The counter value is treated as either a 32 or 64 bit big endian integer
 depending on if the initialisation vector is 96 or 64 bits respectively.
 
-Reference CHACHA specifies 8/12/20 rounds and a 64 bit initialisation vector.
+RefCounted CHACHA specifies 8/12/20 rounds and a 64 bit initialisation vector.
 RFC7539 CHACHA specifies 20 rounds and a 96 bit initialisation vector.
 
 Parameters
@@ -93,16 +93,16 @@ a_rounds:	Number of CHACHA rounds 8/12/20
 
 Return	:	Encrypted buffer, same length as input buffer.
 """
-static func encrypt_raw(a_in:PoolByteArray, a_ky:PoolByteArray, a_iv:PoolByteArray, a_ctr:int = 1, a_rounds:int = 20) -> PoolByteArray:
+static func encrypt_raw(a_in:PackedByteArray, a_ky:PackedByteArray, a_iv:PackedByteArray, a_ctr:int = 1, a_rounds:int = 20) -> PackedByteArray:
 	assert(a_ky.size() == 16 || a_ky.size() == 32)
 	assert(a_iv.size() ==  8 || a_iv.size() == 12)
 	assert(a_iv.size() ==  8 || (a_iv.size() == 12 && a_ctr < 0x100000000))
 	assert(a_rounds ==  8 || a_rounds == 12 || a_rounds == 20)
 	
 	# main loop
-	var op:PoolByteArray  = PoolByteArray()
+	var op:PackedByteArray  = PackedByteArray()
 	op.resize(a_in.size())
-	var key:PoolByteArray = PoolByteArray()
+	var key:PackedByteArray = PackedByteArray()
 
 	var chacha:_ChaChaBlockCipher = _ChaChaBlockCipher.new()
 	
@@ -138,7 +138,7 @@ a_rounds:	Number of CHACHA rounds 8/12/20
 
 Return	:	Decrypted buffer.
 """
-static func decrypt_base64(a_in:String, a_ky:PoolByteArray, a_iv:PoolByteArray, a_ctr:int = 1, a_rounds:int = 20) -> PoolByteArray:
+static func decrypt_base64(a_in:String, a_ky:PackedByteArray, a_iv:PackedByteArray, a_ctr:int = 1, a_rounds:int = 20) -> PackedByteArray:
 	return decrypt_raw(Marshalls.base64_to_raw(a_in), a_ky, a_iv, a_ctr, a_rounds)
 
 
@@ -154,7 +154,7 @@ a_rounds:	Number of CHACHA rounds 8/12/20
 
 Return	:	Decrypted buffer.
 """
-static func decrypt_hex(a_in:String, a_ky:PoolByteArray, a_iv:PoolByteArray, a_ctr:int = 1, a_rounds:int = 20) -> PoolByteArray:
+static func decrypt_hex(a_in:String, a_ky:PackedByteArray, a_iv:PackedByteArray, a_ctr:int = 1, a_rounds:int = 20) -> PackedByteArray:
 	return encrypt_raw(NCrypt.hex_to_raw(a_in), a_ky, a_iv, a_ctr, a_rounds)
 
 
@@ -170,7 +170,7 @@ a_rounds:	Number of CHACHA rounds 8/12/20
 
 Return	:	Decrypted buffer.
 """
-static func decrypt_raw(a_in:PoolByteArray, a_ky:PoolByteArray, a_iv:PoolByteArray, a_ctr:int = 1, a_rounds:int = 20) -> PoolByteArray:
+static func decrypt_raw(a_in:PackedByteArray, a_ky:PackedByteArray, a_iv:PackedByteArray, a_ctr:int = 1, a_rounds:int = 20) -> PackedByteArray:
 	return encrypt_raw(a_in, a_ky, a_iv, a_ctr, a_rounds)
 
 # ==============================================================================
@@ -179,7 +179,7 @@ static func decrypt_raw(a_in:PoolByteArray, a_ky:PoolByteArray, a_iv:PoolByteArr
 class _ChaChaBlockCipher:
 	var st:Array 			= []
 	var ws:Array 			= []
-	var ky:PoolByteArray	= PoolByteArray()
+	var ky:PackedByteArray	= PackedByteArray()
 	
 	func _init() -> void:
 		st.resize(16)
@@ -191,7 +191,7 @@ class _ChaChaBlockCipher:
 		ky.resize(64)
 		return
 	
-	func chacha20_block(a_ky:PoolByteArray, a_iv:PoolByteArray, a_ctr:int, a_rounds:int) -> PoolByteArray:
+	func chacha20_block(a_ky:PackedByteArray, a_iv:PackedByteArray, a_ctr:int, a_rounds:int) -> PackedByteArray:
 		assert(st.size() == 16)
 		assert(ws.size() == 16)
 		assert(a_ky.size() == 16 || a_ky.size() == 32)

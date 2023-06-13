@@ -4,12 +4,12 @@ extends Node
 # I Made It So That Everything Would Be Ease-ier HAHAHHA
 # I Need To Stop Making Horrible Jokes
 
-onready var Easing = preload("res://Easing/Easing.gd");
+@onready var Easing = preload("res://Easing/Easing.gd");
 
 var easeList:Dictionary = {};
 
 func clear():
-	easeList.empty();
+	easeList.is_empty();
 
 func setEase(easeId:String = "", v1:float = 0, v2:float = 0, secs:float = 0, transitionType:String = "Linear", easeType:String = "EaseNone", unpausable:bool = false):
 	var easeData:Dictionary = { "data": Vector3(v1, v2, secs), "current": Vector2(v2, v1), "elapsed": 0.0, "value": v1, "transition": transitionType, "type": easeType, "unpausable": unpausable, "playing": false };

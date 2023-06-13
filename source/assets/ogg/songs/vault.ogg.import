@@ -1,15 +1,19 @@
 [remap]
 
-importer="ogg_vorbis"
-type="AudioStreamOGGVorbis"
-path="res://.import/vault.ogg-e21c89294205a5631d978a9918c0039a.oggstr"
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://dx07j07y16qxu"
+path="res://.godot/imported/vault.ogg-e21c89294205a5631d978a9918c0039a.oggvorbisstr"
 
 [deps]
 
 source_file="res://assets/ogg/songs/vault.ogg"
-dest_files=[ "res://.import/vault.ogg-e21c89294205a5631d978a9918c0039a.oggstr" ]
+dest_files=["res://.godot/imported/vault.ogg-e21c89294205a5631d978a9918c0039a.oggvorbisstr"]
 
 [params]
 
 loop=true
 loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

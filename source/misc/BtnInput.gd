@@ -1,13 +1,13 @@
-tool
+@tool
 extends Node2D
 
 signal pressed();
 
-onready var btn:Button = get_node("Button");
-onready var btnText:Label = btn.get_node("BtnText");
-onready var anim:AnimationPlayer = get_node("Anim");
+@onready var btn:Button = get_node("Button");
+@onready var btnText:Label = btn.get_node("BtnText");
+@onready var anim:AnimationPlayer = get_node("Anim");
 
-export(String) var content:String = "Content" setget setContent;
+@export var content:String = "Content": set = setContent;
 
 func setContent(val):
 	content = val;
@@ -30,14 +30,14 @@ func button_up():
 	anim.play("Up");
 
 func _ready():
-	btn.connect("pressed", self, "btnPressed");
-	btn.connect("button_down", self, "button_down");
-	btn.connect("button_up", self, "button_up");
+	btn.connect("pressed", Callable(self, "btnPressed"));
+	btn.connect("button_down", Callable(self, "button_down"));
+	btn.connect("button_up", Callable(self, "button_up"));
 	updateValues();
 	pass;
 
 func _draw():
-	if (Engine.editor_hint):
+	if (Engine.is_editor_hint()):
 		if (!btn):
 			btn = get_node("Button");
 		if (!btnText):

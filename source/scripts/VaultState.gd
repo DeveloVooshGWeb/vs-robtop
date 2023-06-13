@@ -1,10 +1,10 @@
 extends Node2D
 
-onready var vault:Node2D = get_node("Vault");
-onready var input:LineEdit = vault.get_node("Input");
-onready var dialogue:Label = vault.get_node("Dialogue");
-onready var spooky:Node2D = vault.get_node("Spooky");
-onready var back:Sprite = get_node("Back");
+@onready var vault:Node2D = get_node("Vault");
+@onready var input:LineEdit = vault.get_node("Input");
+@onready var dialogue:Label = vault.get_node("Dialogue");
+@onready var spooky:Node2D = vault.get_node("Spooky");
+@onready var back:Sprite2D = get_node("Back");
 var backSize:Vector2 = Vector2.ZERO;
 var backSelected:bool = false;
 var spookySelected:bool = false;
@@ -41,13 +41,13 @@ var rng:RandomNumberGenerator = RandomNumberGenerator.new();
 
 func parseDialogue(dialogueContent:String) -> Array:
 	var dialogueData:Array = [];
-	var dialogues:PoolStringArray = dialogueContent.split("\n\n");
+	var dialogues:PackedStringArray = dialogueContent.split("\n\n");
 	for dialogue in dialogues:
-		var dialogueTree:PoolStringArray = dialogue.split("\n");
+		var dialogueTree:PackedStringArray = dialogue.split("\n");
 		if (dialogueTree.size() >= 2):
 			var face:String = dialogueTree[0].to_lower();
-			dialogueTree.remove(0);
-			var dialogueText:String = dialogueTree.join("\n");
+			dialogueTree.remove_at(0);
+			var dialogueText:String = "\n".join(dialogueTree);
 			dialogueData.append([face, dialogueText]);
 	return dialogueData;
 
@@ -88,7 +88,7 @@ func updateDialogue():
 
 func _onPressed(index:int, pos:Vector2):
 	if (index == 1):
-		if (SaveManager.save.vault.unlocked):
+		if (SaveManager.saveData.vault.unlocked):
 			if (Utils.collide(pos, Vector2.ZERO, spooky.position, spooky.size)):
 				spookySelected = true;
 		if (Utils.collide(pos, Vector2.ZERO, back.position, backSize)):
@@ -96,7 +96,7 @@ func _onPressed(index:int, pos:Vector2):
 
 func _onDrag(index:int, pos:Vector2):
 	if (index == 1):
-		if (SaveManager.save.vault.unlocked):
+		if (SaveManager.saveData.vault.unlocked):
 			if (spookySelected):
 				if (Utils.collide(pos, Vector2.ZERO, spooky.position, spooky.size)):
 					EaseHandler.playEase("spooky");
@@ -109,7 +109,7 @@ func _onDrag(index:int, pos:Vector2):
 
 func _onReleased(index:int, pos:Vector2):
 	if (index == 1):
-		if (SaveManager.save.vault.unlocked):
+		if (SaveManager.saveData.vault.unlocked):
 			EaseHandler.playEase("spooky", true);
 			if (spookySelected):
 				processVault();
@@ -123,7 +123,7 @@ func processVault():
 	input.text = input.text.to_lower();
 	if (vaultData.code != input.text && input.text != ""):
 		vaultData.code = "" + input.text;
-		vaultData.hash = vaultData.hashes.find(hashData(vaultData.code.to_ascii()));
+		vaultData.hash = vaultData.hashes.find(hashData(vaultData.code.to_ascii_buffer()));
 	match (input.text):
 		"":
 			updateDialogue();
@@ -140,24 +140,24 @@ func processVault():
 					updateDialogue();
 	input.text = "";
 
-func hashData(data:PoolByteArray) -> String:
-	var key:PoolByteArray = [];
+func hashData(data:PackedByteArray) -> String:
+	var key:PackedByteArray = [];
 	if (data.size() > 0):
-		var firstByte:PoolByteArray = Marshalls.raw_to_base64([data[0]]).to_ascii();
+		var firstByte:PackedByteArray = Marshalls.raw_to_base64([data[0]]).to_ascii_buffer();
 		var byteSize:int = firstByte.size();
 		for i in range(64):
 			key.append(firstByte[i % byteSize]);
-	return HMACSHA256.hmac_hex(Marshalls.raw_to_base64(data).to_ascii(), key);
+	return HMACSHA256.hmac_hex(Marshalls.raw_to_base64(data).to_ascii_buffer(), key);
 
 func _ready():
 	FPSCounter.get_node("FPSCanvas/FPS").visible = false;
 	EaseHandler.clear();
 	rng.randomize();
-	if (SaveManager.save.vault.unlocked):
+	if (SaveManager.saveData.vault.unlocked):
 		cacheDialogue();
 		vaultData.dialogue.fail = parseDialogue(Assets.getDat("vault/failureManagement", false, true));
-		if (!SaveManager.save.vault.entered):
-			SaveManager.save.vault.entered = true;
+		if (!SaveManager.saveData.vault.entered):
+			SaveManager.saveData.vault.entered = true;
 			SaveManager.save();
 			vaultData.dialogue.data = parseDialogue(Assets.getDat("vault/firstEnter", false, true));
 		else:
@@ -173,14 +173,14 @@ func _ready():
 			remove_child(child);
 			child.call_deferred("free");
 	EaseHandler.setEase("back", 0.75, 0.85, 0.25, "Bounce", "EaseOut");
-	InputHandler.connect("mouseDown", self, "_onPressed");
-	InputHandler.connect("mouseDrag", self, "_onDrag");
-	InputHandler.connect("mouseUp", self, "_onReleased");
+	InputHandler.connect("mouseDown", Callable(self, "_onPressed"));
+	InputHandler.connect("mouseDrag", Callable(self, "_onDrag"));
+	InputHandler.connect("mouseUp", Callable(self, "_onReleased"));
 	backSize = back.texture.get_size() * back.scale;
 	pass;
 
 func _process(delta):
-	if (SaveManager.save.vault.unlocked):
+	if (SaveManager.saveData.vault.unlocked):
 		var daScale:float = EaseHandler.getEase("spooky");
 		spooky.scale.x = daScale;
 		spooky.scale.y = daScale;

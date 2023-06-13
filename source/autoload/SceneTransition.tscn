@@ -2,7 +2,7 @@
 
 [ext_resource path="res://autoload/SceneTransition.gd" type="Script" id=1]
 [ext_resource path="res://assets/res/loading/loadingRub.res" type="SpriteFrames" id=2]
-[ext_resource path="res://assets/fonts/tres/loading.tres" type="DynamicFont" id=3]
+[ext_resource path="res://assets/fonts/tres/loading.tres" type="FontFile" id=3]
 
 [sub_resource type="Animation" id=1]
 length = 0.001
@@ -13,8 +13,8 @@ tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0 ),
-"transitions": PoolRealArray( 1 ),
+"times": PackedFloat32Array( 0 ),
+"transitions": PackedFloat32Array( 1 ),
 "update": 0,
 "values": [ Color( 1, 1, 1, 0 ) ]
 }
@@ -28,8 +28,8 @@ tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0, 0.4 ),
-"transitions": PoolRealArray( 1, 1 ),
+"times": PackedFloat32Array( 0, 0.4 ),
+"transitions": PackedFloat32Array( 1, 1 ),
 "update": 0,
 "values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
 }
@@ -43,8 +43,8 @@ tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0, 0.4 ),
-"transitions": PoolRealArray( 1, 1 ),
+"times": PackedFloat32Array( 0, 0.4 ),
+"transitions": PackedFloat32Array( 1, 1 ),
 "update": 0,
 "values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
 }
@@ -58,22 +58,22 @@ script = ExtResource( 1 )
 modulate = Color( 1, 1, 1, 0 )
 
 [node name="FG" type="ColorRect" parent="Canvas/Parent"]
-margin_right = 1920.0
-margin_bottom = 1080.0
+offset_right = 1920.0
+offset_bottom = 1080.0
 color = Color( 0, 0, 0, 1 )
 
-[node name="Loading" type="AnimatedSprite" parent="Canvas/Parent"]
+[node name="Loading" type="AnimatedSprite2D" parent="Canvas/Parent"]
 position = Vector2( 1820, 980 )
 frames = ExtResource( 2 )
 animation = "loading"
-frame = 14
+frame = 43
 playing = true
 
 [node name="Text" type="Label" parent="Canvas/Parent"]
-margin_top = 880.0
-margin_right = 1000.0
-margin_bottom = 1080.0
-custom_fonts/font = ExtResource( 3 )
+offset_top = 880.0
+offset_right = 1000.0
+offset_bottom = 1080.0
+theme_override_fonts/font = ExtResource( 3 )
 align = 1
 valign = 1
 

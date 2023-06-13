@@ -1,0 +1,16 @@
+[remap]
+
+importer="font_data_bmfont"
+type="FontFile"
+uid="uid://cdagl3mryovtl"
+path="res://.godot/imported/goldPusab.fnt-3bffdd30e8007eda190b552aabfb43ba.fontdata"
+
+[deps]
+
+source_file="res://assets/fonts/goldPusab.fnt"
+dest_files=["res://.godot/imported/goldPusab.fnt-3bffdd30e8007eda190b552aabfb43ba.fontdata"]
+
+[params]
+
+fallbacks=[]
+compress=true

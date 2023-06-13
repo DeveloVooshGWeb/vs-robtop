@@ -1,21 +1,21 @@
-tool
+@tool
 extends Node2D
 
 signal toggled(checked);
 
-onready var btn:CheckButton = get_node("Btn");
-onready var slider:Node2D = btn.get_node("Slider");
-onready var anim:AnimationPlayer = get_node("Anim");
+@onready var btn:CheckButton = get_node("Btn");
+@onready var slider:Node2D = btn.get_node("Slider");
+@onready var anim:AnimationPlayer = get_node("Anim");
 
 var btnOffset:float = 64;
 
-export(String) var key:String = "Key" setget setKey;
+@export var key:String = "Key": set = setKey
 
 func _fixData():
 	btn.text = key + ":";
-	btn.rect_size.x = 0;
-	slider.position.x = btn.rect_size.x - btnOffset;
-	btn.rect_size.x = slider.position.x + 96;
+	btn.size.x = 0;
+	slider.position.x = btn.size.x - btnOffset;
+	btn.size.x = slider.position.x + 96;
 
 func changed(checked:bool):
 	btn.release_focus();
@@ -27,11 +27,11 @@ func changed(checked:bool):
 
 func _ready():
 	_fixData();
-	btn.connect("toggled", self, "changed");
+	btn.connect("toggled", Callable(self, "changed"));
 	pass;
 
 func _draw():
-	if (Engine.editor_hint):
+	if (Engine.is_editor_hint()):
 		if (!btn):
 			btn = get_node("Btn");
 		if (!slider):

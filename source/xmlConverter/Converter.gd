@@ -3,11 +3,11 @@ extends Node2D
 # ASSUMPTIONS:
 # - Sheet and image have the same path
 # - Sheet is an Adobe Animate XML and image is a PNG
-export(String) var load_path = "res://"
-export(String) var save_path = "res://"
-export(bool) var optimize = false
+@export var load_path: String = "res://"
+@export var save_path: String = "res://"
+@export var optimize: bool = false
 signal finished
-onready var anim_sprite = $AnimatedSprite
+@onready var anim_sprite = $AnimatedSprite2D
 func do_it():
 	
 	var xml_parser = XMLParser.new()
@@ -15,19 +15,18 @@ func do_it():
 	
 	var frames = anim_sprite.frames
 	var texture:ImageTexture = ImageTexture.new();
-	var f:File = File.new();
-	var e:bool = f.open(load_path + ".png", File.READ) != OK;
-	if (!e):
-		var byteArray:PoolByteArray = f.get_buffer(f.get_len());
+	var f = FileAccess.open(load_path + ".png", FileAccess.READ);
+	if (f != null && f.get_open_error() == OK):
+		var byteArray:PackedByteArray = f.get_buffer(f.get_length());
 		f.close();
 		var img:Image = Image.new();
 		img.load_png_from_buffer(byteArray);
 		texture.create_from_image(img);
-		texture.flags = Texture.FLAG_FILTER;
+		# texture.flags = Texture2D.FLAG_FILTER;
 		
 	var cur_anim_name;
 	
-	print(ResourceSaver.get_recognized_extensions(frames))
+	# print(ResourceSaver._get_recognized_extensions(frames))
 	
 	var err = xml_parser.read()
 	while err == OK:
@@ -40,7 +39,7 @@ func do_it():
 				print("loaded name: " + loaded_anim_name)
 				
 				if cur_anim_name != loaded_anim_name:
-					frames.add_animation(loaded_anim_name)
+					frames.add_animation_library(loaded_anim_name)
 					frames.set_animation_loop(loaded_anim_name, false)
 					frames.set_animation_speed(loaded_anim_name, 24)
 					cur_anim_name = loaded_anim_name
@@ -64,7 +63,7 @@ func do_it():
 					new_frame.region = new_region
 					new_frame.margin = new_margin
 					# new_frame.flags = Texture.FLAG_MIPMAPS
-					new_frame.flags = Texture.FLAG_FILTER
+					# new_frame.flags = Texture2D.FLAG_FILTER
 					new_frame.filter_clip = true
 					
 					# var frame_path: String = save_path + "/" + loaded_anim_name;
@@ -83,20 +82,20 @@ func do_it():
 				# new_frame.get_data().save_png(frame_path);
 				
 					frames.add_frame(cur_anim_name, new_frame)
-					$AnimatedSprite.play(loaded_anim_name)
-		yield(get_tree().create_timer(0.01), "timeout")
+					$AnimatedSprite2D.play(loaded_anim_name)
+		await get_tree().create_timer(0.01).timeout
 		err = xml_parser.read()
 	
 	print("done")
 	
-	frames.remove_animation("default")
-	ResourceSaver.save(save_path + ".res", frames, ResourceSaver.FLAG_COMPRESS)
+	frames.remove_animation_library("default")
+	ResourceSaver.save(frames, save_path + ".res", ResourceSaver.FLAG_COMPRESS)
 	
 	emit_signal("finished")
 func _ready():
 	set_process(false)
 	
-	yield(get_tree(), "idle_frame")
+	await get_tree().idle_frame
 	
 var bunce = false
 func _input(event):
@@ -108,8 +107,8 @@ func _input(event):
 			$Panel/savepath.hide()
 			$Panel/loadpath.hide()
 			do_it()
-			yield(self, "finished")
-			$AnimatedSprite.hide()
+			await self.finished
+			$AnimatedSprite2D.hide()
 			$Panel/loadpath.text = ""
 			$Panel/savepath.text = ""
 			$Panel/loadpath.placeholder_text = ""

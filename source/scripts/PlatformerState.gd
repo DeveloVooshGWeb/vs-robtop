@@ -3,19 +3,19 @@ extends Node2D
 # Man this is gonna be pain...
 
 # Let's start with the Camera
-onready var cam:Camera2D = get_node("Cam");
-onready var camTimer:Timer = get_node("Timer");
+@onready var cam:Camera2D = get_node("Cam");
+@onready var camTimer:Timer = get_node("Timer");
 
 # Ok now the bg and ground stuff
-onready var bg:Node2D = get_node("BG");
-onready var gnd:KinematicBody2D = get_node("Gnd");
+@onready var bg:Node2D = get_node("BG");
+@onready var gnd:CharacterBody2D = get_node("Gnd");
 
 # Now for the funi sprites
-onready var bgSpr:Sprite = bg.get_node("Spr");
-onready var gndSpr:Sprite = gnd.get_node("Spr");
+@onready var bgSpr:Sprite2D = bg.get_node("Spr");
+@onready var gndSpr:Sprite2D = gnd.get_node("Spr");
 
 # Alright now the player
-onready var player:KinematicBody2D = get_node("Player");
+@onready var player:CharacterBody2D = get_node("Player");
 
 # Alright now the shiz
 # Lemme move to Data.gd
@@ -35,14 +35,14 @@ func updateTheme():
 # Initialization
 func init():
 	updateTheme();
-	camTimer.connect("timeout", self, "updateCamera");
+	camTimer.connect("timeout", Callable(self, "updateCamera"));
 	camTimer.start(camUpdateTime);
-	InputHandler.connect("pressed", self, "pressed");
-	InputHandler.connect("justReleased", self, "justReleased");
+	InputHandler.connect("pressed", Callable(self, "pressed"));
+	InputHandler.connect("justReleased", Callable(self, "justReleased"));
 
 func _ready():
 	var thread:Thread = Thread.new();
-	thread.start(self, "init");
+	thread.start(Callable(self, "init"));
 	pass;
 
 # Eh

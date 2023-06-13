@@ -1,0 +1,16 @@
+[remap]
+
+importer="font_data_bmfont"
+type="FontFile"
+uid="uid://rl3wiyyegd8f"
+path="res://.godot/imported/pusab.fnt-bf2024acbb5392279970154d4f66b667.fontdata"
+
+[deps]
+
+source_file="res://assets/fonts/pusab.fnt"
+dest_files=["res://.godot/imported/pusab.fnt-bf2024acbb5392279970154d4f66b667.fontdata"]
+
+[params]
+
+fallbacks=[]
+compress=true

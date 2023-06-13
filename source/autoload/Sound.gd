@@ -1,11 +1,13 @@
 extends Node
 
 func _ready():
-	$GCTimer.connect("timeout", self, "_gc");
+	$GCTimer.connect("timeout", Callable(self, "_gc"));
 
-func loadSound(sound:String = "", gain:float = 0, key:PoolByteArray = [], bus:String = "Sounds") -> AudioStreamPlayer:
+func loadSound(sound:String = "", gain:float = 0, cache:bool = false, key:PackedByteArray = [], bus:String = "Sounds") -> AudioStreamPlayer:
 	sound = "sounds/" + sound;
-	var target:AudioStreamOGGVorbis = Assets.getAudio(sound, key);
+	var target:AudioStreamOggVorbis = Assets.getAudio(sound, key);
+	if (!cache && OggLoader.cached(sound)):
+		OggLoader.remove(sound);
 	if (target == null):
 		target = Assets.getAudio(sound, key);
 	if (target == null):
@@ -20,14 +22,16 @@ func loadSound(sound:String = "", gain:float = 0, key:PoolByteArray = [], bus:St
 	$Sounds.add_child(snd);
 	return snd;
 
-func play(sound:String = "", gain:float = 0, key:PoolByteArray = [], bus:String = "Sounds") -> AudioStreamPlayer:
-	var snd:AudioStreamPlayer = loadSound(sound, gain, key, bus);
+func play(sound:String = "", gain:float = 0, cache:bool = false, key:PackedByteArray = [], bus:String = "Sounds") -> AudioStreamPlayer:
+	var snd:AudioStreamPlayer = loadSound(sound, gain, cache, key, bus);
 	snd.play();
 	return snd;
 
-func loadMusic(sound:String = "", gain:float = 0, loop:bool = true, key:PoolByteArray = [], bus:String = "Music") -> AudioStreamPlayer:
+func loadMusic(sound:String = "", gain:float = 0, loop:bool = true, cache:bool = false, key:PackedByteArray = [], bus:String = "Music") -> AudioStreamPlayer:
 	sound = "songs/" + sound;
-	var target:AudioStreamOGGVorbis = Assets.getAudio(sound, key);
+	var target:AudioStreamOggVorbis = Assets.getAudio(sound, key);
+	if (!cache && OggLoader.cached(sound)):
+		OggLoader.remove(sound);
 	if (target == null):
 		target = Assets.getAudio(sound, key);
 	if (target == null):
@@ -42,8 +46,8 @@ func loadMusic(sound:String = "", gain:float = 0, loop:bool = true, key:PoolByte
 	$Songs.add_child(snd);
 	return snd;
 
-func playMusic(sound:String = "", gain:float = 0, loop:bool = true, key:PoolByteArray = [], bus:String = "Music") -> AudioStreamPlayer:
-	var snd:AudioStreamPlayer = loadMusic(sound, gain, loop, key, bus);
+func playMusic(sound:String = "", gain:float = 0, loop:bool = true, cache:bool = false, key:PackedByteArray = [], bus:String = "Music") -> AudioStreamPlayer:
+	var snd:AudioStreamPlayer = loadMusic(sound, gain, loop, cache, key, bus);
 	snd.play();
 	return snd;
 	
@@ -98,7 +102,7 @@ func findSound(stream):
 				if (i.stream == stream):
 					return i;
 
-func findSong(stream:AudioStreamOGGVorbis):
+func findSong(stream:AudioStreamOggVorbis):
 	for i in $Songs.get_children():
 		if (i):
 			print(i.name);

@@ -1,9 +1,9 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=2 format=3 uid="uid://ccj5kryyswjjl"]
 
-[ext_resource path="res://assets/png/gdGrounds/1.png" type="Texture" id=2]
+[ext_resource type="Texture2D" uid="uid://bw52ug1jcjsqt" path="res://assets/png/gdGrounds/1.png" id="2"]
 
-[node name="MenuBlock" type="Sprite"]
-modulate = Color( 0.196078, 0.466667, 1, 1 )
-position = Vector2( 84, 1000 )
-scale = Vector2( 0.75, 0.75 )
-texture = ExtResource( 2 )
+[node name="MenuBlock" type="Sprite2D"]
+modulate = Color(0.196078, 0.466667, 1, 1)
+position = Vector2(84, 1000)
+scale = Vector2(0.75, 0.75)
+texture = ExtResource("2")

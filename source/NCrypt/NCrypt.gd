@@ -36,8 +36,8 @@ const U64_SHIFTS_INV	= [0,8,16,24,32,40,48,56]
 # ==============================================================================
 # UTILITIES
 
-static func hex_to_raw(a_in:String) -> PoolByteArray:
-	var out:PoolByteArray = PoolByteArray()
+static func hex_to_raw(a_in:String) -> PackedByteArray:
+	var out:PackedByteArray = PackedByteArray()
 	
 	var hs:String = '0x00'
 	for i in range(0, a_in.length(), 2):
@@ -48,7 +48,7 @@ static func hex_to_raw(a_in:String) -> PoolByteArray:
 	return out
 	
 	
-static func raw_to_hex(a_in:PoolByteArray) -> String:
+static func raw_to_hex(a_in:PackedByteArray) -> String:
 	var hex:String = ''
 	for i in range(a_in.size()):
 		hex += '%02x' % (a_in[i] & 0xff)

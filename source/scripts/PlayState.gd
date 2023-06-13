@@ -48,15 +48,15 @@ var keyMap:Dictionary = {
 
 var rng:RandomNumberGenerator = RandomNumberGenerator.new();
 
-onready var stageViewport:Viewport = get_node("StageViewport/Viewport");
-onready var stage:Node2D;
+@onready var stageViewport:SubViewport = get_node("StageViewport/SubViewport");
+@onready var stage:Node2D;
 
-onready var hudViewport:Viewport = get_node("HUDViewport/Viewport");
-onready var hud:Node2D = hudViewport.get_node("HUD");
-onready var hudCam:Camera2D = hud.get_node("HUDCam");
-onready var strumContainer:Node2D = hud.get_node("Strums");
-onready var strumY:float = strumContainer.get_node("StrumLine").position.y;
-onready var strumPositions:Array = [
+@onready var hudViewport:SubViewport = get_node("HUDViewport/SubViewport");
+@onready var hud:Node2D = hudViewport.get_node("HUD");
+@onready var hudCam:Camera2D = hud.get_node("HUDCam");
+@onready var strumContainer:Node2D = hud.get_node("Strums");
+@onready var strumY:float = strumContainer.get_node("StrumLine").position.y;
+@onready var strumPositions:Array = [
 	strumContainer.get_node("S1").position.x,
 	strumContainer.get_node("S2").position.x,
 	strumContainer.get_node("S3").position.x,
@@ -66,17 +66,17 @@ onready var strumPositions:Array = [
 	strumContainer.get_node("S7").position.x,
 	strumContainer.get_node("S8").position.x
 ];
-onready var noteTree:Node2D = hud.get_node("Notes");
-onready var healthBar:Node2D = hud.get_node("HealthBar");
-onready var enemyBar:ColorRect = healthBar.get_node("EnemyBar");
-onready var enemyIcon:AnimatedSprite = healthBar.get_node("EnemyIcon");
-onready var playerIcon:AnimatedSprite = healthBar.get_node("PlayerIcon");
+@onready var noteTree:Node2D = hud.get_node("Notes");
+@onready var healthBar:Node2D = hud.get_node("HealthBar");
+@onready var enemyBar:ColorRect = healthBar.get_node("EnemyBar");
+@onready var enemyIcon:AnimatedSprite2D = healthBar.get_node("EnemyIcon");
+@onready var playerIcon:AnimatedSprite2D = healthBar.get_node("PlayerIcon");
 
-onready var rsgTimer:Timer = get_node("RSGTimer");
-onready var rsgTween:Tween = get_node("RSGTween");
-onready var rsg:AnimatedSprite = hud.get_node("RSG");
+@onready var rsgTimer:Timer = get_node("RSGTimer");
+@onready var rsgTween:Tween = get_tree().create_tween().set_parallel(true);
+@onready var rsg:AnimatedSprite2D = hud.get_node("RSG");
 
-onready var stats:Node2D = get_node("Stats");
+@onready var stats:Node2D = get_node("Stats");
 
 var barSize:int = 888;
 var iconData:Dictionary = {
@@ -91,10 +91,12 @@ var inst:AudioStreamPlayer = null;
 var voices:AudioStreamPlayer = null;
 var startedCountdown:bool = false;
 
+var finishedStats:bool = false;
+
 func initStrums():
 	for i in range(strumPositions.size()):
 		var strumPos:Vector2 = Vector2(strumPositions[i], strumY);
-		var strum:Node2D = noteRes.instance();
+		var strum:Node2D = noteRes.instantiate();
 		strum.properties.col = 0;
 		strum.properties.row = 0;
 		strum.properties.noteId = i % 4;
@@ -111,7 +113,7 @@ func initStrums():
 			playerStrums.append(strums[i]);
 		
 func setStage(path:String = "Rub"):
-	stage = Assets.getStage(path).instance();
+	stage = Assets.getStage(path).instantiate();
 	stage.position = Vector2(-960, -540);
 	stageViewport.add_child(stage);
 	sigobashList = stage.get_node("SiGoBaShList");
@@ -128,7 +130,7 @@ func randn(arr:Array) -> int:
 	return num;
 
 func loadChart():
-	var chartData:PoolByteArray = Assets.getBytes("data/charts/" + curChart + "/" + str(difficulty) + ".bin");
+	var chartData:PackedByteArray = Assets.getBytes("data/charts/" + curChart + "/" + str(difficulty) + ".bin");
 	var data:Dictionary = Chart.parse(chartData);
 	bpm = int(data.bpm);
 	BeatHandler.setBPM(bpm);
@@ -139,7 +141,7 @@ func loadChart():
 	for section in data.sections:
 		focuses.append(section.mustHitSection);
 		var notes:Array = section.notes.duplicate(true);
-		notes.sort_custom(Chart, "noteRowSort");
+		notes.sort_custom(Callable(Chart, "noteRowSort"));
 		for props in notes:
 			var noteSteps:float = float(i * 16) + (float(props.row) / Data.rowCap);
 			var noteTime:float = noteSteps * BeatHandler.stepSecs;
@@ -171,16 +173,15 @@ func endSong():
 	stats.visible = true;
 	pass;
 
-func switchToNext():
-	if (finished):
-		SceneTransition.switch("MainMenuState");
+func statsFinished():
+	finishedStats = true;
 	pass;
 
 func loadSong():
-	BeatHandler.connect("stepHit", self, "stepHit");
-	BeatHandler.connect("beatHit", self, "beatHit");
-	BeatHandler.connect("sectionHit", self, "sectionHit");
-	BeatHandler.connect("finished", self, "endSong");
+	BeatHandler.connect("stepHit", Callable(self, "stepHit"));
+	BeatHandler.connect("beatHit", Callable(self, "beatHit"));
+	BeatHandler.connect("sectionHit", Callable(self, "sectionHit"));
+	BeatHandler.connect("finished", Callable(self, "endSong"));
 	
 	inst = Sound.loadMusic(curSong + "/Inst", 0, false);
 	voices = Sound.loadMusic(curSong + "/Voices", 0, false);
@@ -254,7 +255,7 @@ func updateSiGoBaSh():
 
 func updateScore(noteTime:float, forceShit:bool = false, forceSick:bool = false):
 	var noteDiff:float = abs(noteTime - BeatHandler.getPosition());
-	var sigobash:Node2D = sigobashRes.instance();
+	var sigobash:Node2D = sigobashRes.instantiate();
 	notesPassed += 1;
 	if ((noteDiff > Data.sigobashOffsets[0] || forceShit) && !forceSick):
 		if (!forceShit):
@@ -287,7 +288,7 @@ func updateScore(noteTime:float, forceShit:bool = false, forceSick:bool = false)
 		acc = 0;
 	if (acc > 1):
 		acc = 1;
-	accuracy = stepify(acc * 100.0, 0.01);
+	accuracy = snapped(acc * 100.0, 0.01);
 	hud.updAccuracy(accuracy);
 
 	if (sigobashList):
@@ -310,7 +311,7 @@ func justPressed(keyName:String):
 						strum.confirm();
 						stage.bfConfirm(key, note.properties.alt);
 						updateScore(note.misc.time);
-						inputNotes.remove(inputNotes.find(note));
+						inputNotes.erase(note);
 						if (note.properties.noteLength <= 0.0):
 							hit(note.properties, note.misc, isEnemy);
 							noteTree.remove_child(note);
@@ -334,6 +335,8 @@ func justPressed(keyName:String):
 										break;
 							if (!exemption):
 								missed(note.properties, note.misc, isEnemy);
+	if (finishedStats && keyName == "Enter"):
+		SceneTransition.switch("MainMenuState");
 
 func pressed(keyName:String):
 	var key:int = -1;
@@ -350,7 +353,7 @@ func pressed(keyName:String):
 					hold(hold.properties.duplicate(true), hold.misc.duplicate(true), hold.properties.col < 4);
 					hold.holdUpdate();
 				else:
-					holds.remove(holds.find(hold));
+					holds.erase(hold);
 
 func justReleased(keyName:String):
 	if (keyName == "7"):
@@ -361,7 +364,7 @@ func justReleased(keyName:String):
 	if (keyMap.has(keyName)):
 		key = keyMap[keyName];
 	if (key in range(playerStrums.size())):
-		holdList[key].empty();
+		holdList[key].is_empty();
 		var strum:Node2D = playerStrums[key];
 		strum.normal();
 		stage.bfNormal();
@@ -381,7 +384,7 @@ func updateHealthBar():
 	if (health > 2):
 		health = 2;
 		hud.updHealth(health);
-	enemyBar.rect_size.x = iconData.spacing * (2.0 - health);
+	enemyBar.size.x = iconData.spacing * (2.0 - health);
 	var iconSpacing:float = (-iconData.spacing * health) + iconData.spacing;
 	enemyIcon.position.x = iconSpacing - iconData.offset;
 	playerIcon.position.x = iconSpacing + iconData.offset;
@@ -394,10 +397,15 @@ func rsgUpdate():
 			if (rsgCount > 0):
 				rsg.position = Data.vec2cen;
 				rsg.modulate.a = 1.0;
-				rsgTween.remove_all();
-				rsgTween.interpolate_property(rsg, "position", Data.vec2cen, Data.vec2cen + Vector2(0, 25), BeatHandler.beatSecs, Tween.TRANS_CUBIC, Tween.EASE_IN_OUT);
-				rsgTween.interpolate_property(rsg, "modulate", Color.white, Color(1, 1, 1, 0), BeatHandler.beatSecs, Tween.TRANS_CUBIC, Tween.EASE_IN_OUT);
-				rsgTween.start();
+				if (rsgTween):
+					rsgTween.kill();
+				rsgTween = get_tree().create_tween().set_parallel(true);
+# TOOD: LEARN TWEENING MADAFAKA
+				rsg.position = Data.vec2cen;
+				rsgTween.tween_property(rsg, "position", Data.vec2cen + Vector2(0, 25), BeatHandler.beatSecs).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN_OUT);
+				rsg.modulate = Color.WHITE;
+				rsgTween.tween_property(rsg, "modulate:a", 0, BeatHandler.beatSecs).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN_OUT);
+			#   rsgTween.start();
 			Sound.play(rsgAudioMap[rsgCount], -12);
 		stage.beatHit(-1, true);
 		rsgCount += 1;
@@ -420,7 +428,7 @@ func cache():
 #			sprFrames.get_frame(anim, j).get_data().save_png("res://assets/png/notes/type8/" + Utils.snake_case(anim).to_upper() + "_" + String(j) + ".png");
 	for i in range(Data.noteVariants.size()):
 		for j in range(4):
-			Assets.getSpriteFrames("notes/" + String(i) + "_N" + String(j));
+			Assets.getSpriteFrames("notes/" + str(i) + "_N" + str(j));
 	Assets.getSpriteFrames("play/sigobash");
 	for i in range(3):
 		Assets.getAudio("missnote" + str(i + 1));
@@ -429,13 +437,13 @@ func cache():
 func initPressTimers():
 	for i in range(4):
 		enemyPressTimers[i].one_shot = true;
-		enemyPressTimers[i].connect("timeout", self, "enmRelease", [i]);
+		enemyPressTimers[i].connect("timeout", Callable(self, "enmRelease").bind(i));
 		add_child(enemyPressTimers[i]);
 	pass;
 
 func init():
-	stageViewport.get_texture().flags = Texture.FLAG_FILTER;
-	hudViewport.get_texture().flags = Texture.FLAG_FILTER;
+	stageViewport.canvas_item_default_texture_filter = SubViewport.DEFAULT_CANVAS_ITEM_TEXTURE_FILTER_LINEAR_WITH_MIPMAPS;
+	hudViewport.canvas_item_default_texture_filter = SubViewport.DEFAULT_CANVAS_ITEM_TEXTURE_FILTER_LINEAR_WITH_MIPMAPS;
 	
 	initStrums();
 	if (Data.loadData.queue.size() <= 0):
@@ -456,12 +464,12 @@ func init():
 	
 	Data.song = "" + curSong;
 	
-	rsgTimer.connect("timeout", self, "rsgUpdate");
-	InputHandler.connect("justPressed", self, "justPressed");
-	InputHandler.connect("pressed", self, "pressed");
-	InputHandler.connect("justReleased", self, "justReleased");
-	SceneTransition.connect("finished", self, "_sceneLoaded");
-	stats.connect("finishedStats", self, "switchToNext");
+	rsgTimer.connect("timeout", Callable(self, "rsgUpdate"));
+	InputHandler.connect("justPressed", Callable(self, "justPressed"));
+	InputHandler.connect("pressed", Callable(self, "pressed"));
+	InputHandler.connect("justReleased", Callable(self, "justReleased"));
+	SceneTransition.connect("finished", Callable(self, "_sceneLoaded"));
+	stats.connect("finishedStats", Callable(self, "statsFinished"));
 	
 	initialized[0] = true;
 	
@@ -478,9 +486,9 @@ func _ready():
 
 func executeEvent(events:Array):
 	for event in events:
-		var ref:FuncRef = funcref(self, event.function);
+		var ref:Callable = Callable(self, event.function);
 		if (ref.is_valid()):
-			ref.call_funcv(event.args);
+			ref.callv(event.args);
 
 func updateEvents():
 	if (eventList.size() > 0):
@@ -500,7 +508,7 @@ func updateNotes():
 		var noteData:Dictionary = noteList[0];
 		var diff:float = (noteData.time - instPos) - ((16.0 / speed) * BeatHandler.stepSecs);
 		if (diff <= 0.0):
-			var note:Node2D = noteRes.instance();
+			var note:Node2D = noteRes.instantiate();
 			note.properties = noteData.props;
 			note.misc.speed = noteData.speed;
 			note.misc.steps = noteData.steps;
@@ -558,7 +566,7 @@ func updateNotes():
 					if (noteDead):
 						strum.normal();
 						stage.enmNormal();
-						holds.remove(holds.find(note));
+						holds.erase(note);
 		if (weakref(note).get_ref()):
 			if (note.position.y + note.holdEnd.offset.y + float(sizeAdd / 2) <= 0.0):
 				missed(note.properties, note.misc, isEnemy, ignoreMissCount);
@@ -567,22 +575,29 @@ func updateNotes():
 				note.call_deferred("free");
 
 func _process(delta):
-	if (!initialized.has(false) && !finished):
-		if (!startedCountdown && inst):
-			if (!BeatHandler.songFinished):
-				instPos = BeatHandler.getPosition();
-				if (voices):
-					var instPlaybackPos:float = inst.get_playback_position();
-					var vocalPos:float = voices.get_playback_position();
-					if (abs(instPlaybackPos - vocalPos) >= Data.vocalResetThreshold):
-						voices.seek(instPlaybackPos);
-			else:
-				voices = null;
-				inst = null;
-		updateEvents();
-		updateNotes();
-		updateHealthBar();
-		updateSiGoBaSh();
+	if (!initialized.has(false)):
+		if (!finished):
+			if (!startedCountdown && inst):
+				if (!BeatHandler.songFinished):
+					instPos = BeatHandler.getPosition();
+					if (voices):
+						var instPlaybackPos:float = inst.get_playback_position();
+						var vocalPos:float = voices.get_playback_position();
+						if (abs(instPlaybackPos - vocalPos) >= Data.vocalResetThreshold):
+							voices.seek(instPlaybackPos);
+				else:
+					voices = null;
+					inst = null;
+			for strum in strums:
+				if (weakref(strum.note).get_ref()):
+					if (strum.note.animation.count("Confirm") > 0):
+						strum.note.offset = strum.origNOffset + (strum.strumOffsets[strum.properties.noteId] * strum.scale);
+					else:
+						strum.note.offset = strum.origNOffset;
+			updateEvents();
+			updateNotes();
+			updateHealthBar();
+			updateSiGoBaSh();
 	pass;
 
 func _fixed_process(delta):

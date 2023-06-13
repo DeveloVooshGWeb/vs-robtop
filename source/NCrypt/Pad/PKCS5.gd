@@ -43,7 +43,7 @@ a_bytes	:	Byte multiple to pad to. Must be between 4 and 124.
 
 Return	:	Padded buffer. Between 1 and a_bytes will have been appended.
 """
-static func pad(a_in:PoolByteArray, a_bytes:int) -> PoolByteArray:
+static func pad(a_in:PackedByteArray, a_bytes:int) -> PackedByteArray:
 	assert(a_bytes >- 0x04)
 	assert(a_bytes <= 0x7f)
 	a_bytes = a_bytes & 0x7c
@@ -69,12 +69,12 @@ a_in	:	Input buffer
 
 Return	:	Input buffer with padding removed.
 """
-static func unpad(a_in:PoolByteArray) -> PoolByteArray:
+static func unpad(a_in:PackedByteArray) -> PackedByteArray:
 	var ilen:int = a_in.size()
 	var n:int    = a_in[ilen-1]
 	assert(n >     0)
 	assert(n <= 0x7c)
 
-	a_in = a_in.subarray(0, ilen-n-1)
+	a_in = a_in.slice(0, ilen-n-1)
 
 	return a_in

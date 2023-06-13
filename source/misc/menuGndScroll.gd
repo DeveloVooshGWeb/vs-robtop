@@ -1,6 +1,6 @@
 extends ParallaxBackground
 
-export(float) var scrollSpeed = 600.0;
+@export var scrollSpeed: float = 600.0;
 
 var menuGndWidth:float = 384.0;
 

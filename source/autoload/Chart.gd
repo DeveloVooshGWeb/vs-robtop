@@ -1,16 +1,16 @@
 extends Node
 
-func stringToByteArray(string:String) -> PoolByteArray:
-	var bytes:PoolByteArray = [string.length()];
-	bytes.append_array(string.to_ascii());
+func stringToByteArray(string:String) -> PackedByteArray:
+	var bytes:PackedByteArray = [string.length()];
+	bytes.append_array(string.to_ascii_buffer());
 	return bytes;
 
-func stringToInt16Array(string:String) -> PoolByteArray:
-	var bytes:PoolByteArray = [];
+func stringToInt16Array(string:String) -> PackedByteArray:
+	var bytes:PackedByteArray = [];
 	var strLen:int = string.length();
 	bytes.append(strLen >> 8);
 	bytes.append(strLen & 255);
-	bytes.append_array(string.to_ascii());
+	bytes.append_array(string.to_ascii_buffer());
 	return bytes;
 
 func translateC2P(data:Array):
@@ -31,7 +31,7 @@ func noteDictToNoteArr(noteDict:Dictionary) -> Array:
 	var noteArr:Array = [];
 	for key in noteDict.keys():
 		noteArr.append(noteDict[key]);
-	noteArr.sort_custom(Chart, "noteRowSort");
+	noteArr.sort_custom(Callable(self, "noteRowSort"));
 	return noteArr;
 
 func noteArrToNoteDict(noteArr:Array) -> Dictionary:
@@ -40,8 +40,8 @@ func noteArrToNoteDict(noteArr:Array) -> Dictionary:
 		noteDict[noteArr[i].hash()] = noteArr[i];
 	return noteDict;
 
-func conv(data:Dictionary) -> PoolByteArray:
-	var chartData:PoolByteArray = [];
+func conv(data:Dictionary) -> PackedByteArray:
+	var chartData:PackedByteArray = [];
 	var speed:int = int(data.speed * 100);
 	chartData.append_array([data.bpm >> 8, data.bpm & 255, speed >> 8, speed & 255]);
 	chartData.append_array(stringToByteArray(data.song));
@@ -83,9 +83,9 @@ func add(num:Dictionary) -> int:
 
 func addN(num:Dictionary, add:int) -> int:
 	num.int += add - 1;
-	return num.int;
+	return num.int + 1;
 
-func parse(chartData:PoolByteArray) -> Dictionary:
+func parse(chartData:PackedByteArray) -> Dictionary:
 	var data:Dictionary = {
 		"bpm": 130,
 		"speed": 1.0,
@@ -99,7 +99,7 @@ func parse(chartData:PoolByteArray) -> Dictionary:
 		data.bpm = chartData[add(ind)] << 8 | chartData[add(ind)];
 		data.speed = float(chartData[add(ind)] << 8 | chartData[add(ind)]) / 100.0;
 		var songLen:int = chartData[add(ind)];
-		data.song = chartData.subarray(add(ind), addN(ind, songLen)).get_string_from_ascii();
+		data.song = chartData.slice(add(ind), addN(ind, songLen)).get_string_from_ascii();
 		var sectionLen:int = chartData[add(ind)] << 8 | chartData[add(ind)];
 		for i in range(sectionLen):
 			var section:Dictionary = {
@@ -118,7 +118,7 @@ func parse(chartData:PoolByteArray) -> Dictionary:
 				note.noteOffset = Vector2(chartData[add(ind)] << 8 | chartData[add(ind)], chartData[add(ind)] << 8 | chartData[add(ind)]);
 				note.noteLength = float(chartData[add(ind)] << 8 | chartData[add(ind)]) / 100.0;
 				var evtLen:int = chartData[add(ind)] << 8 | chartData[add(ind)];
-				note.evt = chartData.subarray(add(ind), addN(ind, evtLen)).get_string_from_ascii();
+				note.evt = chartData.slice(add(ind), addN(ind, evtLen)).get_string_from_ascii();
 				section.notes.append(note);
 			data.sections.append(section);
 	return data;

@@ -1,6 +1,6 @@
 extends Node2D
 
-onready var spr:AnimatedSprite = get_node("AnimatedSprite");
+@onready var spr:AnimatedSprite2D = get_node("AnimatedSprite2D");
 var faces:Array = ["4k", "bozo", "disappoint", "ew", "gloat", "regular", "sadge", "sleep", "surprise", "sus1", "sus2", "sus3", "talk"];
 var size:Vector2 = Vector2.ZERO;
 

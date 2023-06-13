@@ -1,6 +1,6 @@
 extends Node2D
 
-onready var dispText:Label = get_node("DisplayText");
+@onready var dispText:Label = get_node("DisplayText");
 
 var dispScore:String = "0";
 var dispMisses:String = "0";
@@ -8,7 +8,7 @@ var dispHealth:String = "50%";
 var dispAccuracy:String = "100%";
 
 func updScore(score:int):
-	dispScore = String(score);
+	dispScore = str(score);
 	dispText.text = "Score: " + dispScore + " | Misses: " + dispMisses + " | Health: " + dispHealth + " | Accuracy: " + dispAccuracy;
 	pass;
 

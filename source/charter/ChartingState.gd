@@ -1,46 +1,46 @@
 extends Node2D
 
-onready var grid:Node2D = get_node("Grid");
-onready var glowRect:ColorRect = grid.get_node("GlowRect");
-onready var noteTree:Node2D = grid.get_node("Notes");
+@onready var grid:Node2D = get_node("Grid");
+@onready var glowRect:ColorRect = grid.get_node("GlowRect");
+@onready var noteTree:Node2D = grid.get_node("Notes");
 
-onready var acpp:Node2D = get_node("AltChartPropsPanel");
-onready var sngi:Node2D = acpp.get_node("Song");
-onready var relb:Node2D = acpp.get_node("Reload");
-onready var lcb:Node2D = acpp.get_node("Load");
-onready var scb:Node2D = acpp.get_node("Save");
-onready var csb:Node2D = acpp.get_node("Copy");
-onready var psb:Node2D = acpp.get_node("Paste");
-onready var sncb:Node2D = acpp.get_node("SNC");
-onready var snrb:Node2D = acpp.get_node("SNR");
+@onready var acpp:Node2D = get_node("AltChartPropsPanel");
+@onready var sngi:Node2D = acpp.get_node("Song");
+@onready var relb:Node2D = acpp.get_node("Reload");
+@onready var lcb:Node2D = acpp.get_node("Load");
+@onready var scb:Node2D = acpp.get_node("Save");
+@onready var csb:Node2D = acpp.get_node("Copy");
+@onready var psb:Node2D = acpp.get_node("Paste");
+@onready var sncb:Node2D = acpp.get_node("SNC");
+@onready var snrb:Node2D = acpp.get_node("SNR");
 
-onready var spp:Node2D = get_node("SectionPropsPanel");
-onready var fpb:Node2D = spp.get_node("Focus");
+@onready var spp:Node2D = get_node("SectionPropsPanel");
+@onready var fpb:Node2D = spp.get_node("Focus");
 
-onready var npp:Node2D = get_node("NotePropsPanel");
-onready var oxi:Node2D = npp.get_node("OffsetX");
-onready var oyi:Node2D = npp.get_node("OffsetY");
-onready var leni:Node2D = npp.get_node("Length");
-onready var aab:Node2D = npp.get_node("Alternative");
+@onready var npp:Node2D = get_node("NotePropsPanel");
+@onready var oxi:Node2D = npp.get_node("OffsetX");
+@onready var oyi:Node2D = npp.get_node("OffsetY");
+@onready var leni:Node2D = npp.get_node("Length");
+@onready var aab:Node2D = npp.get_node("Alternative");
 
-onready var epp:Node2D = get_node("EventPropsPanel");
-onready var gevti:Node2D = epp.get_node("GEVTInput");
+@onready var epp:Node2D = get_node("EventPropsPanel");
+@onready var gevti:Node2D = epp.get_node("GEVTInput");
 
-onready var enl:Label = get_node("ExtraNote");
-onready var sdl:Label = get_node("SectionDisplay");
+@onready var enl:Label = get_node("ExtraNote");
+@onready var sdl:Label = get_node("SectionDisplay");
 
 var sdlBase:String = "Current Section: ";
 
-onready var cpp:Node2D = get_node("ChartPropsPanel");
-onready var bpmi:Node2D = cpp.get_node("BPM");
-onready var spi:Node2D = cpp.get_node("Speed");
-onready var iob:Node2D = cpp.get_node("IO");
-onready var vob:Node2D = cpp.get_node("VO");
+@onready var cpp:Node2D = get_node("ChartPropsPanel");
+@onready var bpmi:Node2D = cpp.get_node("BPM");
+@onready var spi:Node2D = cpp.get_node("Speed");
+@onready var iob:Node2D = cpp.get_node("IO");
+@onready var vob:Node2D = cpp.get_node("VO");
 
-onready var ntl:Label = get_node("NoteType");
+@onready var ntl:Label = get_node("NoteType");
 
-onready var ld:FileDialog = get_node("OpenDialog");
-onready var sd:FileDialog = get_node("SaveDialog");
+@onready var ld:FileDialog = get_node("OpenDialog");
+@onready var sd:FileDialog = get_node("SaveDialog");
 
 var noteScene:Resource = preload("res://scenes/notes/Note.tscn");
 var gridY:float = 768;
@@ -90,7 +90,7 @@ var selected:int = -1;
 var unThread:Thread;
 
 func spawnNote(id:int = 2, col:int = 0, row:int = 0, noteLength:float = 0.0, noteType:int = 0, nOffset:Vector2 = Vector2(0, 0), alt:bool = false, evt:String = ""):
-	var note:Node2D = noteScene.instance();
+	var note:Node2D = noteScene.instantiate();
 	note.properties.alt = alt;
 	note.properties.isStrum = false;
 	note.properties.col = col;
@@ -142,7 +142,7 @@ func updateNotes():
 		curNotes.clear();
 		updateProperties(-1);
 	sdl.text = sdlBase + str(cur.section);
-	fpb.get_node("Btn").pressed = curSection.mustHitSection;
+	fpb.get_node("Btn").button_pressed = curSection.mustHitSection;
 	
 	for key in curNotes.keys():
 		var props:Dictionary = curNotes[key];
@@ -300,10 +300,9 @@ func updateMisc():
 
 func chartLoad(path:String):
 	FPSCounter.get_node("FPSCanvas/FPS").visible = true;
-	var f:File = File.new();
-	var err:bool = f.open(path, File.READ) != OK;
-	if (!err):
-		var chartData:PoolByteArray = f.get_buffer(f.get_len());
+	var f = FileAccess.open(path, FileAccess.READ);
+	if (f != null && f.get_open_error() == OK):
+		var chartData:PackedByteArray = f.get_buffer(f.get_length());
 		f.close();
 		var data:Dictionary = Chart.parse(chartData);
 		chartProperties.bpm = data.bpm;
@@ -329,15 +328,14 @@ func chartSave(path:String):
 		rawSections[i].notes = Chart.noteDictToNoteArr(rawSections[i].notes);
 		finalSections.append(rawSections[i].duplicate());
 		rawSections[i].clear();
-	var chartData:PoolByteArray = Chart.conv({
+	var chartData:PackedByteArray = Chart.conv({
 		"bpm": chartProperties.bpm,
 		"speed": chartProperties.scrollSpeed,
 		"song": chartProperties.song,
 		"sections": finalSections
 	});
-	var f:File = File.new();
-	var err:bool = f.open(path, File.WRITE) != OK;
-	if (!err):
+	var f = FileAccess.open(path, FileAccess.WRITE);
+	if (f != null && f.get_open_error() == OK):
 		f.store_buffer(chartData);
 		f.close();
 
@@ -382,40 +380,40 @@ func snrPressed():
 		updateNotes();
 
 func init():
-	InputHandler.connect("mouseMove", self, "onMove");
-	InputHandler.connect("mouseDown", self, "onClick");
-	InputHandler.connect("mouseScroll", self, "onScroll");
-	InputHandler.connect("mouseDrag", self, "onDrag");
-	InputHandler.connect("justPressed", self, "onJPressed");
-	InputHandler.connect("pressed", self, "onPressed");
-	InputHandler.connect("justReleased", self, "onReleased");
+	InputHandler.connect("mouseMove", Callable(self, "onMove"));
+	InputHandler.connect("mouseDown", Callable(self, "onClick"));
+	InputHandler.connect("mouseScroll", Callable(self, "onScroll"));
+	InputHandler.connect("mouseDrag", Callable(self, "onDrag"));
+	InputHandler.connect("justPressed", Callable(self, "onJPressed"));
+	InputHandler.connect("pressed", Callable(self, "onPressed"));
+	InputHandler.connect("justReleased", Callable(self, "onReleased"));
 	
-	ld.connect("file_selected", self, "chartLoad");
-	sd.connect("file_selected", self, "chartSave");
+	ld.connect("file_selected", Callable(self, "chartLoad"));
+	sd.connect("file_selected", Callable(self, "chartSave"));
 	
-	bpmi.connect("entered", self, "bpmEntered");
-	spi.connect("entered", self, "spEntered");
-	iob.connect("toggled", self, "ioToggled");
-	vob.connect("toggled", self, "voToggled");
+	bpmi.connect("entered", Callable(self, "bpmEntered"));
+	spi.connect("entered", Callable(self, "spEntered"));
+	iob.connect("toggled", Callable(self, "ioToggled"));
+	vob.connect("toggled", Callable(self, "voToggled"));
 	
-	gevti.connect("changed", self, "gevtChanged");
-	gevti.connect("unfocused", self, "gevtUnfocused");
+	gevti.connect("changed", Callable(self, "gevtChanged"));
+	gevti.connect("unfocused", Callable(self, "gevtUnfocused"));
 	
-	oxi.connect("entered", self, "oxEntered");
-	oyi.connect("entered", self, "oyEntered");
-	leni.connect("entered", self, "lenEntered");
-	aab.connect("toggled", self, "aaToggled");
+	oxi.connect("entered", Callable(self, "oxEntered"));
+	oyi.connect("entered", Callable(self, "oyEntered"));
+	leni.connect("entered", Callable(self, "lenEntered"));
+	aab.connect("toggled", Callable(self, "aaToggled"));
 	
-	fpb.connect("toggled", self, "fpToggled");
+	fpb.connect("toggled", Callable(self, "fpToggled"));
 		
-	sngi.connect("entered", self, "sngEntered");
-	relb.connect("pressed", self, "relPressed");
-	lcb.connect("pressed", self, "lcPressed");
-	scb.connect("pressed", self, "scPressed");
-	csb.connect("pressed", self, "csPressed");
-	psb.connect("pressed", self, "psPressed");
-	sncb.connect("pressed", self, "sncPressed");
-	snrb.connect("pressed", self, "snrPressed");
+	sngi.connect("entered", Callable(self, "sngEntered"));
+	relb.connect("pressed", Callable(self, "relPressed"));
+	lcb.connect("pressed", Callable(self, "lcPressed"));
+	scb.connect("pressed", Callable(self, "scPressed"));
+	csb.connect("pressed", Callable(self, "csPressed"));
+	psb.connect("pressed", Callable(self, "psPressed"));
+	sncb.connect("pressed", Callable(self, "sncPressed"));
+	snrb.connect("pressed", Callable(self, "snrPressed"));
 	
 	fillSection();
 	mapCurNotes();
@@ -427,7 +425,7 @@ func init():
 
 func _ready():
 	var thread:Thread = Thread.new();
-	thread.start(self, "init");
+	thread.start(Callable(self, "init"));
 	pass;
 
 func validSel() -> bool:
@@ -482,11 +480,11 @@ func _process(delta):
 	if (validSel()):
 		var row:float = sel.row;
 		var rowPx:float = row * GRID_SIZE;
-		glowRect.rect_position = glowPos + Vector2(sel.col * GRID_SIZE, rowPx);
+		glowRect.position = glowPos + Vector2(sel.col * GRID_SIZE, rowPx);
 		glowRect.visible = true;
 	else:
 		glowRect.visible = false;
-		glowRect.rect_position = disabledGlowPos;
+		glowRect.position = disabledGlowPos;
 	if (inst):
 		if (inst.playing):
 			updateChart();
@@ -497,7 +495,7 @@ func updateNPP(note:Dictionary):
 	oxi.get_node("TextField").text = str(note.noteOffset.x);
 	oyi.get_node("TextField").text = str(note.noteOffset.y);
 	leni.get_node("TextField").text = str(note.noteLength);
-	aab.get_node("Btn").pressed = note.alt;
+	aab.get_node("Btn").button_pressed = note.alt;
 
 func updateInfo(note:Dictionary):
 	if (selected < 0):

@@ -1,38 +1,40 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=7 format=3 uid="uid://cgke74u58jmje"]
 
-[ext_resource path="res://assets/fonts/montserrat/Montserrat-Medium.ttf" type="DynamicFontData" id=1]
-[ext_resource path="res://misc/GEVTInput.gd" type="Script" id=2]
+[ext_resource type="FontFile" uid="uid://1u835b32e5a5" path="res://assets/fonts/montserrat/Montserrat-Medium.ttf" id="1"]
+[ext_resource type="Script" path="res://misc/GEVTInput.gd" id="2"]
 
-[sub_resource type="DynamicFont" id=1]
+[sub_resource type="FontFile" id="1"]
 resource_local_to_scene = true
-size = 24
-use_filter = true
-font_data = ExtResource( 1 )
+fallbacks = Array[Font]([ExtResource("1")])
+face_index = null
+embolden = null
+transform = null
+cache/0/16/0/ascent = 0.0
+cache/0/16/0/descent = 0.0
+cache/0/16/0/underline_position = 0.0
+cache/0/16/0/underline_thickness = 0.0
+cache/0/16/0/scale = 1.0
+cache/0/16/0/kerning_overrides/16/0 = Vector2(0, 0)
 
-[sub_resource type="StyleBoxEmpty" id=2]
+[sub_resource type="StyleBoxEmpty" id="4"]
 
-[sub_resource type="StyleBoxEmpty" id=3]
+[sub_resource type="StyleBoxEmpty" id="3"]
 
-[sub_resource type="StyleBoxEmpty" id=4]
-
-[sub_resource type="StyleBoxEmpty" id=5]
+[sub_resource type="StyleBoxEmpty" id="2"]
 
 [node name="GEVTInput" type="Node2D"]
-script = ExtResource( 2 )
+script = ExtResource("2")
 
 [node name="GEVT = GWeb Event (For Event Notes)" type="Node2D" parent="."]
 
 [node name="GEVTField" type="TextEdit" parent="."]
-margin_right = 600.0
-margin_bottom = 350.0
+offset_right = 600.0
+offset_bottom = 350.0
 mouse_filter = 1
-custom_fonts/font = SubResource( 1 )
-custom_styles/read_only = SubResource( 2 )
-custom_styles/focus = SubResource( 3 )
-custom_styles/normal = SubResource( 4 )
-custom_styles/completion = SubResource( 5 )
+theme_override_fonts/font = SubResource("1")
+theme_override_styles/normal = SubResource("4")
+theme_override_styles/focus = SubResource("3")
+theme_override_styles/read_only = SubResource("2")
 highlight_current_line = true
-syntax_highlighting = true
-show_line_numbers = true
 draw_tabs = true
 draw_spaces = true

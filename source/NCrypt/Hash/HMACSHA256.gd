@@ -40,7 +40,7 @@ a_ky	:	HMAC key.
 
 Return	:	HMAC-SHA256 of input buffer, encoded as a Base64 string.
 """
-static func hmac_base64(a_in:PoolByteArray, a_ky:PoolByteArray) -> String:
+static func hmac_base64(a_in:PackedByteArray, a_ky:PackedByteArray) -> String:
 	return Marshalls.raw_to_base64(hmac_raw(a_in, a_ky))
 
 
@@ -53,7 +53,7 @@ a_ky	:	HMAC key.
 
 Return	:	HMAC-SHA256 of input buffer, encoded as a hexadecimal string.
 """
-static func hmac_hex(a_in:PoolByteArray, a_ky:PoolByteArray) -> String:
+static func hmac_hex(a_in:PackedByteArray, a_ky:PackedByteArray) -> String:
 	return NCrypt.raw_to_hex(hmac_raw(a_in, a_ky))
 
 
@@ -66,7 +66,7 @@ a_ky	:	HMAC key.
 
 Return	:	HMAC-SHA256 of input buffer.
 """
-static func hmac_raw(a_in:PoolByteArray, a_ky:PoolByteArray) -> PoolByteArray:
+static func hmac_raw(a_in:PackedByteArray, a_ky:PackedByteArray) -> PackedByteArray:
 	# keys longer than hash size are shortened by hashing them
 	# keys shorter than hash size are padded to hash size by padding with zeros on the right
 	if (a_ky.size() > 64):
@@ -76,8 +76,8 @@ static func hmac_raw(a_in:PoolByteArray, a_ky:PoolByteArray) -> PoolByteArray:
 	assert(a_ky.size() == 64)
 
 	# generate inner and outer padding keys
-	var outer:PoolByteArray = PoolByteArray()
-	var inner:PoolByteArray = PoolByteArray()
+	var outer:PackedByteArray = PackedByteArray()
+	var inner:PackedByteArray = PackedByteArray()
 	for i in range(a_ky.size()):
 		outer.append(a_ky[i] ^ 0x5c)
 		inner.append(a_ky[i] ^ 0x36)

@@ -48,8 +48,10 @@ func init(SONG:AudioStreamPlayer = null, BPM:int = 130):
 	prevSteps = 0;
 	songFinished = false;
 	song = SONG;
-	song.disconnect("finished", self, "finished");
-	song.connect("finished", self, "finished");
+	if (song != null):
+		if (song.is_connected("finished", Callable(self, "finishedF"))):
+			song.disconnect("finished", Callable(self, "finishedF"));
+		song.connect("finished", Callable(self, "finishedF"));
 	songFinished = false;
 	setBPM(BPM);
 
@@ -82,7 +84,7 @@ func stopPlaying():
 	startedPlaying = false;
 	pass;
 
-func finished():
+func finishedF():
 	song = null;
 	songFinished = true;
 	emit_signal("finished");

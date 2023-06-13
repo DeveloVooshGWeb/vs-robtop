@@ -6,23 +6,23 @@ extends Node
 
 var aes = AESContext.new();
 
-var iv:PoolByteArray = [
+var iv:PackedByteArray = [
 	0x4C, 0x20, 0x4E, 0x6F,
 	0x20, 0x56, 0x61, 0x75,
 	0x6C, 0x74, 0x20, 0x53,
 	0x74, 0x75, 0x66, 0x66
 ];
 
-func encrypt(key:PoolByteArray, data:PoolByteArray) -> PoolByteArray:
+func encrypt(key:PackedByteArray, data:PackedByteArray) -> PackedByteArray:
 	aes.start(AESContext.MODE_CBC_ENCRYPT, key, iv);
-	var padded:PoolByteArray = PKCS5.pad(data, 16);
-	var result:PoolByteArray = aes.update(padded);
+	var padded:PackedByteArray = PKCS5.pad(data, 16);
+	var result:PackedByteArray = aes.update(padded);
 	aes.finish();
 	return result;
 
-func decrypt(key:PoolByteArray, data:PoolByteArray) -> PoolByteArray:
+func decrypt(key:PackedByteArray, data:PackedByteArray) -> PackedByteArray:
 	aes.start(AESContext.MODE_CBC_DECRYPT, key, iv);
-	var result:PoolByteArray = aes.update(data);
+	var result:PackedByteArray = aes.update(data);
 	aes.finish();
 	result = PKCS5.unpad(result);
 	return result;

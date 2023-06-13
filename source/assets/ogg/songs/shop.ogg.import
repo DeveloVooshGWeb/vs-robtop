@@ -1,15 +1,19 @@
 [remap]
 
-importer="ogg_vorbis"
-type="AudioStreamOGGVorbis"
-path="res://.import/shop.ogg-9ffe1b485cf45a4eabbcdaf764ee02c3.oggstr"
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://dxfgq72c5o2aj"
+path="res://.godot/imported/shop.ogg-9ffe1b485cf45a4eabbcdaf764ee02c3.oggvorbisstr"
 
 [deps]
 
 source_file="res://assets/ogg/songs/shop.ogg"
-dest_files=[ "res://.import/shop.ogg-9ffe1b485cf45a4eabbcdaf764ee02c3.oggstr" ]
+dest_files=["res://.godot/imported/shop.ogg-9ffe1b485cf45a4eabbcdaf764ee02c3.oggvorbisstr"]
 
 [params]
 
 loop=true
 loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4
