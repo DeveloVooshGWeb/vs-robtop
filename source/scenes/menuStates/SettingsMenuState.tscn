@@ -1,4 +1,0 @@
-[gd_scene format=3 uid="uid://d4nwpfbe3bcfc"]
-
-[node name="SettingsMenuState" type="Node2D"]
-position = Vector2(960, 540)

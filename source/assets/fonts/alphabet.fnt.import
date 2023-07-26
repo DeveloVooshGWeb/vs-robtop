@@ -1,0 +1,16 @@
+[remap]
+
+importer="font_data_bmfont"
+type="FontFile"
+uid="uid://dlrfdgbac3srk"
+path="res://.godot/imported/alphabet.fnt-06ab83121cf6926782b921aac0821aff.fontdata"
+
+[deps]
+
+source_file="res://assets/fonts/alphabet.fnt"
+dest_files=["res://.godot/imported/alphabet.fnt-06ab83121cf6926782b921aac0821aff.fontdata"]
+
+[params]
+
+fallbacks=[]
+compress=true

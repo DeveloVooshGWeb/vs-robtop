@@ -1,5 +1,0 @@
-[gd_scene format=3 uid="uid://cftnxhe2ysqs4"]
-
-[node name="charDanceTitle" type="Node2D"]
-
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
