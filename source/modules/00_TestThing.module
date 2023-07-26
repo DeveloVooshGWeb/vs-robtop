@@ -1,0 +1,5 @@
+# Singleton
+extends Node
+
+func even(num:int) -> bool:
+	return num % 2 == 0;

@@ -1,0 +1,20 @@
+[gd_scene load_steps=3 format=3 uid="uid://btch6hs0634vf"]
+
+[ext_resource type="Script" path="res://autoload/Soundtray.gd" id="1_01qd5"]
+[ext_resource type="Script" path="res://autoload/SoundtrayRenderer.gd" id="2_avxuc"]
+
+[node name="Soundtray" type="Node2D"]
+script = ExtResource("1_01qd5")
+
+[node name="Canvas" type="CanvasLayer" parent="."]
+layer = -128
+visible = false
+
+[node name="Renderer" type="Node2D" parent="Canvas"]
+texture_filter = 1
+position = Vector2(0, -90)
+script = ExtResource("2_avxuc")
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 0.05
+one_shot = true

@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://bjflfge83ue3i"]
+
+[ext_resource type="SpriteFrames" path="res://assets/res/title/logoBumpin.res" id="1"]
+
+[node name="logoBumpin" type="Node2D"]
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = ExtResource("1")
+frame = 14

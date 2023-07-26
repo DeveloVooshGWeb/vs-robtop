@@ -1,0 +1,45 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://xmlConverter/Converter.gd" type="Script" id=1]
+
+[sub_resource type="SpriteFrames" id=1]
+animations = [ {
+"frames": [  ],
+"loop": true,
+"name": "default",
+"speed": 5.0
+} ]
+
+[node name="Converter" type="Node2D"]
+script = ExtResource( 1 )
+
+[node name="Panel" type="Panel" parent="."]
+offset_right = 1280.0
+offset_bottom = 720.0
+
+[node name="Credits" type="Label" parent="Panel"]
+offset_right = 1280.0
+offset_bottom = 187.0
+text = "Editor made by rayanmargham aswell as the original FNF Godot Port"
+align = 1
+valign = 1
+
+[node name="loadpath" type="LineEdit" parent="Panel"]
+offset_left = 293.0
+offset_top = 221.0
+offset_right = 943.0
+offset_bottom = 335.0
+align = 1
+placeholder_text = "Load XML and PNG From? (EX:res://Assets/Stages/Characters/TestSheet/DADDY_DEAREST"
+
+[node name="savepath" type="LineEdit" parent="Panel"]
+offset_left = 237.0
+offset_top = 457.0
+offset_right = 999.0
+offset_bottom = 557.0
+align = 1
+placeholder_text = "Save converted to?"
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+frames = SubResource( 1 )
+offset = Vector2( 100, 400 )

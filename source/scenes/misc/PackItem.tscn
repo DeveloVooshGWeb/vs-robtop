@@ -1,0 +1,62 @@
+[gd_scene load_steps=9 format=3 uid="uid://lvk5xhm3l31n"]
+
+[ext_resource type="Script" path="res://scripts/misc/PackItem.gd" id="1"]
+[ext_resource type="SpriteFrames" path="res://assets/res/selection/tableBG.res" id="2"]
+[ext_resource type="SpriteFrames" path="res://assets/res/difficultyIcons/labelled.res" id="3"]
+[ext_resource type="FontFile" path="res://assets/fonts/pusab.res" id="4"]
+[ext_resource type="Texture2D" uid="uid://spwepjba0ubd" path="res://assets/png/selection/viewBtn.png" id="5"]
+[ext_resource type="Texture2D" uid="uid://bmnrxa1lxm0ox" path="res://assets/png/selection/check.png" id="6"]
+[ext_resource type="Texture2D" uid="uid://cbahrrbe2y1wh" path="res://assets/png/selection/bar.png" id="7"]
+[ext_resource type="Texture2D" uid="uid://dh6ndtp5wq3wt" path="res://assets/png/selection/barBG.png" id="8"]
+
+[node name="PackItem" type="Node2D"]
+script = ExtResource("1")
+songs = 1
+
+[node name="Table" type="AnimatedSprite2D" parent="."]
+sprite_frames = ExtResource("2")
+animation = &"table"
+centered = false
+
+[node name="DiffIcon" type="AnimatedSprite2D" parent="."]
+position = Vector2(128, 128)
+scale = Vector2(0.75, 0.75)
+sprite_frames = ExtResource("3")
+animation = &"icons"
+
+[node name="Title" type="Label" parent="."]
+offset_right = 1048.0
+offset_bottom = 70.0
+theme_override_fonts/font = ExtResource("4")
+text = "Pack"
+
+[node name="BarBG" type="Sprite2D" parent="."]
+position = Vector2(512, 128)
+texture = ExtResource("8")
+
+[node name="Bar" type="Sprite2D" parent="."]
+position = Vector2(256, 104)
+texture = ExtResource("7")
+centered = false
+region_enabled = true
+region_rect = Rect2(0, 0, 0, 48)
+
+[node name="Progress" type="Label" parent="."]
+offset_left = 256.0
+offset_top = 104.0
+offset_right = 987.0
+offset_bottom = 173.0
+scale = Vector2(0.7, 0.7)
+theme_override_fonts/font = ExtResource("4")
+text = "0/1"
+
+[node name="Check" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(720, 128)
+scale = Vector2(0.75, 0.75)
+texture = ExtResource("6")
+
+[node name="ViewBtn" type="Sprite2D" parent="."]
+position = Vector2(916.75, 128)
+scale = Vector2(1.5, 1.5)
+texture = ExtResource("5")

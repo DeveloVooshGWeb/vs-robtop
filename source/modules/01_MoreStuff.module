@@ -1,0 +1,17 @@
+extends Node
+
+var g:Dictionary = Modules.globals;
+@onready var p = get_parent();
+var time:float = 0;
+
+func _ready():
+	print(g.TestThing.even(2));
+
+func _process(delta):
+	if (time >= 1):
+		time = 0;
+		p.justReleased(KEY_UP);
+		p.justReleased(KEY_LEFT);
+		p.justReleased(KEY_DOWN);
+		p.justReleased(KEY_RIGHT);
+	time += delta;

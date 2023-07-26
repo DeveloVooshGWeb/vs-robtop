@@ -1,0 +1,14 @@
+[gd_resource type="Shader" format=3 uid="uid://comxme4l0da50"]
+
+[resource]
+code = "shader_type canvas_item;
+
+uniform float offset = 0;
+uniform sampler2D SCREEN_TEXTURE : hint_screen_texture, filter_linear_mipmap;
+
+void fragment() {
+	vec4 rChannel = texture(SCREEN_TEXTURE, vec2(SCREEN_UV.x - (offset * SCREEN_PIXEL_SIZE.x), SCREEN_UV.y));
+	vec4 gChannel = texture(SCREEN_TEXTURE, SCREEN_UV);
+	vec4 bChannel = texture(SCREEN_TEXTURE, vec2(SCREEN_UV.x + (offset * SCREEN_PIXEL_SIZE.x), SCREEN_UV.y));
+	COLOR = vec4(rChannel.r, gChannel.g, bChannel.b, 1);
+}"
